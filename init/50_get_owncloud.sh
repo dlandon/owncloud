@@ -9,4 +9,6 @@ if [ ! -f "/config/www/owncloud/index.php" ]; then
 	rm -r /tmp/owncloud-$VERSION.tar.bz2
 fi
 
+cp /config/www/owncloud/core/img/favicon.ico /config/www/owncloud/favicon.ico
+
 chown -R abc:abc /config/www/owncloud
