@@ -59,6 +59,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 Changes:
 
 2017-06-03
-- Initial release - 10.0.2.
+- Initial release - ownCloud 10.0.2.
 - Fix upstream-php handler.
 - Fix initial load of ownCloud.
+
+2017-06-04
+- Add redis server for transactional file locking.
