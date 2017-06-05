@@ -44,6 +44,8 @@ server {
 
   rewrite ^/.well-known/carddav /remote.php/dav/ permanent;
   rewrite ^/.well-known/caldav /remote.php/dav/ permanent;
+  rewrite ^/caldav(.*)$ /remote.php/dav$1 permanent;
+  rewrite ^/carddav(.*)$ /remote.php/dav$1 permanent;
 
   # The following 2 rules are only needed for the user_webfinger app.
   # Uncomment it if you're planning to use this app.
