@@ -23,7 +23,7 @@ sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mysqld_safe
 [[ ! -f /config/nginx/site-confs/default ]] && cp /defaults/default /config/nginx/site-confs/default
 
 # start redis server
-service redis-server start && \
+service redis-server start
 
 chown abc:abc /data
 chown -R abc:abc /config /var/run/php /var/run/redis
