@@ -28,3 +28,4 @@ service redis-server start
 chown abc:abc /data
 chown -R abc:abc /config /var/run/php /var/run/redis
 chmod -R 777 /var/run/mysqld
+chmod 770 /etc/mysql/conf.d/custom.cnf

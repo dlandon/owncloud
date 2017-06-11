@@ -12,3 +12,4 @@ fi
 cp /config/www/owncloud/core/img/favicon.ico /config/www/owncloud/favicon.ico
 
 chown -R abc:abc /config/www/owncloud
+chmod -R 777 /config/www/owncloud

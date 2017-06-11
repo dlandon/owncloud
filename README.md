@@ -59,6 +59,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 Changes:
 
 2017-06-04
+- Fixed some file permission issues.
+
+2017-06-04
 - Add redis server for transactional file locking.
 
 2017-06-03
