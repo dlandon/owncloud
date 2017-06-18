@@ -58,6 +58,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
+2017-06-17
+- Fix ownership and permissions of /data folder if not correct.
+
 2017-06-04
 - Fixed some file permission issues.
 

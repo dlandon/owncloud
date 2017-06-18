@@ -25,7 +25,20 @@ sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mysqld_safe
 # start redis server
 service redis-server start
 
-chown abc:abc /data
-chown -R abc:abc /config /var/run/php /var/run/redis
+# Check the ownership on the /data directory
+if [ `stat -c '%U:%G' /data` != 'abc:users' ]; then
+	echo "Correcting /data ownership..."
+	chown -R abc:abc /data
+fi
+
+# Check the permissions on the /data directory
+if [ `stat -c '%a' /data` != '770' ]; then
+	echo "Correcting /data permissions..."
+	chmod -R 770 /data
+fi
+
+ls -d /config/* | grep -v '/config/data' | xargs chown -R abc:abc
+ls -d /config/* | grep -v '/config/data' | xargs chmod -R go+rw
+chown -R abc:abc /var/run/php /var/run/redis
 chmod -R 777 /var/run/mysqld
 chmod 770 /etc/mysql/conf.d/custom.cnf
