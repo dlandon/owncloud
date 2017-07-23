@@ -62,6 +62,8 @@ RUN \
 	apt-get purge --remove $BUILD_APTLIST -y && \
 	apt-get autoremove -y && \
 	apt-get clean -y && \
+	update-rc.d -f mysql remove && \
+	update-rc.d -f mysql-common remove && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/lib/mysql && \
 	mkdir -p /var/lib/mysql
 
