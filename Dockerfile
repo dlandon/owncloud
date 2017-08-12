@@ -20,6 +20,7 @@ RUN \
 	# mariadb
 	add-apt-repository 'deb http://lon1.mirrors.digitalocean.com/mariadb/repo/10.1/ubuntu trusty main' && \
 	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db && \
+
 	# nginx
 	echo "deb http://ppa.launchpad.net/nginx/development/ubuntu trusty main" >> /etc/apt/sources.list.d/nginx.list && \
 	echo "deb-src http://ppa.launchpad.net/nginx/development/ubuntu trusty main" >> /etc/apt/sources.list.d/nginx.list && \
@@ -37,7 +38,7 @@ RUN \
 	# install packages
 	apt-get update -q && \
 	apt-get install \
-	$DB_APTLIST $APTLIST $BUILD_APTLIST -qy && \
+	$DB_APTLIST $APTLIST $BUILD_APTLIST -qy --force-yes && \
 
 	# build libsmbclient support
 	git clone git://github.com/eduardok/libsmbclient-php.git /tmp/smbclient && \
