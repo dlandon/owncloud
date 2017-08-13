@@ -44,7 +44,7 @@ RUN \
 	apt-get -y install libmysqlclient18 libpcre3-dev libsmbclient.dev nano nginx openssl php-apcu php7.0-bz2 php7.0-cli && \
 	apt-get -y install php7.0-common php7.0-curl php7.0-fpm php7.0-gd php7.0-gmp php7.0-imap php7.0-intl php7.0-ldap && \
 	apt-get -y install php7.0-mbstring php7.0-mcrypt php7.0-mysql php7.0-opcache php7.0-xml php7.0-xmlrpc php7.0-zip && \
-	apt-get -y install php-imagick pkg-config smbclient re2c ssl-cert wget && \
+	apt-get -y install php-imagick pkg-config smbclient re2c ssl-cert && \
 
 	# redis server
 	apt-get -y install redis-server php-redis && \
