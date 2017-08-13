@@ -58,8 +58,8 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
-2017-08-12
-- Update OS.
+2017-08-13
+- Modify package update.
 
 2017-07-23
 - Remove update of mysql.
