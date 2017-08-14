@@ -58,7 +58,7 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
-2017-08-13
+2017-08-14
 - Modify package update.  Update nginx to 1.13.3.
 
 2017-07-23

@@ -37,8 +37,6 @@ if [ `stat -c '%a' /data` != '770' ]; then
 	chmod -R 770 /data
 fi
 
-ls -d /config/* | grep -v '/config/data' | xargs chown -R abc:abc
-ls -d /config/* | grep -v '/config/data' | xargs chmod -R go+rw
 chown -R abc:abc /var/run/php /var/run/redis
 chmod -R 777 /var/run/mysqld
 chmod 770 /etc/mysql/conf.d/custom.cnf
