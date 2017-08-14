@@ -23,14 +23,14 @@ http://192.168.x.x:8080 would show you what's running INSIDE the container on po
 
 
 * `-p 433` - the port(s)
-* `-v /config` - path to owncloud config files and database
-* `-v /data` - path for owncloud to store data
+* `-v /config` - path to ownCloud config files and database
+* `-v /data` - path for ownCloud to store data
 * `-e PGID` for GroupID - see below for explanation
 * `-e PUID` for UserID - see below for explanation
 * `-e TZ` timezone information -eg Europe/London
-* `-e DB_PASS` owncloud database password - see below for explanation
+* `-e DB_PASS` ownCloud database password - see below for explanation
 
-It is based on phusion baseimage  with ssh removed, for shell access whilst the container is running do `docker exec -it owncloud /bin/bash`.
+It is based on phusion baseimage  with ssh removed, for shell access whilst the container is running do `docker exec -it ownCloud /bin/bash`.
 
 ### User / Group Identifiers
 
@@ -46,20 +46,20 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 ## Setting up the application
 * initial webui startup, enter a username and password you want for your user in the setup screen.
 * IMPORTANT, change the data folder to /data.
-* IMPORTANT, because the database is built into the container, the database host is localhost and the database user and the database itself are both owncloud.
+* IMPORTANT, because the database is built into the container, the database host is localhost and the database user and the database itself are both ownCloud.
 *  If you do not set the DB_PASS variable, the database password will default to owncloud.
 * IMPORTANT, if you use your own keys name them cert.key and cert.crt, and place them in config/keys folder.
 * Edit the /config/www/owncloud/lib/base.php file and change the UTC timezone reference to your local timezone for ownCloud to be on the right timezone.  You'll have to go into the docker and use nano to change.
 ## Info
 
-* Shell access whilst the container is running: `docker exec -it owncloud /bin/bash`
-* Upgrade owncloud from the webui, `Daily branch does not work, so just don't...`
-* To monitor the logs of the container in realtime: `docker logs -f owncloud`
+* Shell access whilst the container is running: `docker exec -it ownCloud /bin/bash`
+* Upgrade ownCloud from the webui, `Daily branch does not work, so just don't...`
+* To monitor the logs of the container in realtime: `docker logs -f ownCloud`
 
 Changes:
 
 2017-08-13
-- Modify package update.
+- Modify package update.  Update nginx to 1.13.3.
 
 2017-07-23
 - Remove update of mysql.
