@@ -58,6 +58,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
+2017-09-23
+- Upgrade initial ownCloud install to 10.0.3.
+
 2017-08-14
 - Modify package update.  Update nginx to 1.13.3.
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="10.0.2"
+VERSION="10.0.3"
 
 if [ ! -f "/config/www/owncloud/index.php" ]; then
 	apt-get -y install wget
