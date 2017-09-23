@@ -2,6 +2,8 @@ FROM linuxserver/baseimage
 
 MAINTAINER dlandon
 
+ENV	HOME="/root"
+
 # set owncloud mariadb folders
 ENV MYSQL_DIR="/config"
 ENV DATADIR=$MYSQL_DIR/database
