@@ -1,8 +1,6 @@
-FROM linuxserver/baseimage
+FROM dlandon/owncloud-baseimage
 
-MAINTAINER dlandon
-
-ENV	HOME="/root"
+LABEL maintainer="dlandon"
 
 # set owncloud mariadb folders
 ENV MYSQL_DIR="/config"
@@ -15,17 +13,17 @@ COPY init/ /etc/my_init.d/
 
 # add repositories
 # mariadb
-RUN	add-apt-repository 'deb http://lon1.mirrors.digitalocean.com/mariadb/repo/10.1/ubuntu trusty main' && \
-	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a1bb943db
+RUN	add-apt-repository 'deb http://lon1.mirrors.digitalocean.com/mariadb/repo/10.1/ubuntu xenial main' && \
+	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 F1656F24C74CD1D8
 
 # nginx
-RUN	echo "deb http://ppa.launchpad.net/nginx/development/ubuntu trusty main" >> /etc/apt/sources.list.d/nginx.list && \
-	echo "deb-src http://ppa.launchpad.net/nginx/development/ubuntu trusty main" >> /etc/apt/sources.list.d/nginx.list && \
+RUN	echo "deb http://ppa.launchpad.net/nginx/development/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list && \
+	echo "deb-src http://ppa.launchpad.net/nginx/development/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list && \
 	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 00A6F0A3C300EE8C
 
 # php7
-RUN	echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu trusty main" >> /etc/apt/sources.list.d/php7.list && \
-	echo "deb-src http://ppa.launchpad.net/ondrej/php/ubuntu trusty main" >> /etc/apt/sources.list.d/php7.list && \
+RUN	echo "deb http://ppa.launchpad.net/ondrej/php/ubuntu xenial main" >> /etc/apt/sources.list.d/php7.list && \
+	echo "deb-src http://ppa.launchpad.net/ondrej/php/ubuntu xenial main" >> /etc/apt/sources.list.d/php7.list && \
 	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 4F4EA0AAE5267A6C
 
 # python
