@@ -59,7 +59,7 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 Changes:
 
 2017-09-24
-- Upgrade to phusion 9.22.
+- Upgrade to dlandon/owncloud-baseimage - phusion 9.22.
 
 2017-09-23
 - Upgrade initial ownCloud install to 10.0.3.
