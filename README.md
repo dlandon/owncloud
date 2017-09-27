@@ -46,7 +46,7 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 ## Setting up the application
 * initial webui startup, enter a username and password you want for your user in the setup screen.
 * IMPORTANT, change the data folder to /data.
-* IMPORTANT, because the database is built into the container, the database host is localhost and the database user and the database itself are both ownCloud.
+* IMPORTANT, because the database is built into the container, the database host is localhost and the database user and the database itself are both owncloud.
 *  If you do not set the DB_PASS variable, the database password will default to owncloud.
 * IMPORTANT, if you use your own keys name them cert.key and cert.crt, and place them in config/keys folder.
 * Edit the /config/www/owncloud/lib/base.php file and change the UTC timezone reference to your local timezone for ownCloud to be on the right timezone.  You'll have to go into the docker and use nano to change.
