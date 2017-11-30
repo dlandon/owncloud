@@ -58,6 +58,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
+2017-11-30
+- Update base image.
+
 2017-09-24
 - Upgrade to dlandon/owncloud-baseimage - phusion 9.22.
 

@@ -1,15 +1,18 @@
 #!/bin/bash
+#
+# 60_initialise_database.sh
+#
 
 # set start function that creates user and password, used later
 start_mysql(){
-mysqld --init-file="$tempSqlFile" &
-pid="$!"
-RET=1
-while [[ RET -ne 0 ]]; do
-	mysql -uroot -e "status" > /dev/null 2>&1
-	RET=$?
-	sleep 1
-done
+	mysqld --init-file="$tempSqlFile" &
+	pid="$!"
+	RET=1
+	while [[ RET -ne 0 ]]; do
+		mysql -uroot -e "status" > /dev/null 2>&1
+		RET=$?
+		sleep 1
+	done
 }
 
 # test for existence of mysql file in datadir and start initialise if not present

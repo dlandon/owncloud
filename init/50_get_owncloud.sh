@@ -1,7 +1,12 @@
 #!/bin/bash
+#
+# 50_get_owncloud.sh
+#
 
+# ownCloud version
 VERSION="10.0.3"
 
+# is ownCloud already installed?
 if [ ! -f "/config/www/owncloud/index.php" ]; then
 	apt-get -y install wget
 	wget https://download.owncloud.org/community/owncloud-$VERSION.tar.bz2 -P /tmp/

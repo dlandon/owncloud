@@ -1,4 +1,7 @@
 #!/bin/bash
+#
+# 30_set_config.sh
+#
 
 # make folders if required
 mkdir -p config/{nginx/site-confs,www,log/mysql,log/nginx,keys} /var/run/{php,mysqld}
