@@ -26,7 +26,7 @@ RUN	apt-get update && \
 	apt-get -y upgrade && \
 	apt-get -y dist-upgrade
 
-RUN	apt-get -y install mariadb-server mysqltuner
+RUN	apt-get -y install mariadb-server mysqltuner sudo
 
 RUN	apt-get -y install exim4 exim4-base exim4-config exim4-daemon-light git-core heirloom-mailx jq libaio1 libapr1 && \
 	apt-get -y install libaprutil1 libaprutil1-dbd-sqlite3 libaprutil1-ldap libdbd-mysql-perl libdbi-perl libfreetype6 && \

@@ -4,7 +4,7 @@
 #
 
 # ownCloud version
-VERSION="10.0.3"
+VERSION="10.0.4"
 
 # is ownCloud already installed?
 if [ ! -f "/config/www/owncloud/index.php" ]; then
