@@ -43,3 +43,4 @@ fi
 chown -R abc:abc /var/run/php /var/run/redis
 chmod -R 777 /var/run/mysqld
 chmod 770 /etc/mysql/conf.d/custom.cnf
+chmod -R 770 /config/nginx
