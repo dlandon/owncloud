@@ -4,8 +4,7 @@ LABEL maintainer="dlandon"
 
 ENV MYSQL_DIR="/config"
 ENV DATADIR=$MYSQL_DIR/database
-ENV OWNCLOUD_VERS="10.0.4"
-ENV PHP_VERS="7.0"
+ENV VERSION="10.0.4"
 
 COPY services/ /etc/service/
 COPY defaults/ /defaults/

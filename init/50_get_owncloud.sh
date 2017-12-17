@@ -6,10 +6,10 @@
 # is ownCloud already installed?
 if [ ! -f "/config/www/owncloud/index.php" ]; then
 	apt-get -y install wget
-	wget https://download.owncloud.org/community/owncloud-$OWNCOUD_VERS.tar.bz2 -P /tmp/
+	wget https://download.owncloud.org/community/owncloud-$VERSION.tar.bz2 -P /tmp/
 	mkdir -p /config/www/owncloud
-	tar -xjf /tmp/owncloud-$OWNCLOUD_VERS.tar.bz2 -C /config/www/owncloud  --strip-components=1
-	rm -r /tmp/owncloud-$OWNCLOUD_VERS.tar.bz2
+	tar -xjf /tmp/owncloud-$VERSION.tar.bz2 -C /config/www/owncloud  --strip-components=1
+	rm -r /tmp/owncloud-$VERSION.tar.bz2
 	apt-get -y purge --remove wget
 fi
 
