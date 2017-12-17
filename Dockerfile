@@ -9,7 +9,7 @@ COPY services/ /etc/service/
 COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
 
-RUN	add-apt-repository 'deb http://lon1.mirrors.digitalocean.com/mariadb/repo/10.1/ubuntu xenial main' && \
+RUN	add-apt-repository 'deb http://lon1.mirrors.digitalocean.com/mariadb/repo/10.2/ubuntu xenial main' && \
 	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 F1656F24C74CD1D8
 
 RUN	echo "deb http://ppa.launchpad.net/nginx/development/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list && \
