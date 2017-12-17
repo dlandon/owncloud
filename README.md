@@ -1,4 +1,4 @@
-OwnCloud provides universal access to your files via the web, your computer or your mobile devices — wherever you are. Mariadb 10.2 is built into the image. Built with php7, mariadb 10.2 and nginx 1.13.3. [Owncloud.](https://owncloud.org/)
+OwnCloud provides universal access to your files via the web, your computer or your mobile devices — wherever you are. Mariadb 10.3 is built into the image. Built with php7, mariadb 10.3 and nginx 1.13.3. [Owncloud.](https://owncloud.org/)
 
 ## Usage
 
@@ -59,7 +59,7 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 Changes:
 
 2017-12-16
-- Update mariadb to 10.2.
+- Update mariadb to 10.3.
 - Upgrade initial ownCloud install to 10.0.4.
 
 2017-11-30
