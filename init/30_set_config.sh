@@ -25,6 +25,10 @@ sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mysqld_safe
 [[ ! -f /config/nginx/nginx-fpm.conf ]] && cp /defaults/nginx-fpm.conf /config/nginx/nginx-fpm.conf
 [[ ! -f /config/nginx/site-confs/default ]] && cp /defaults/default /config/nginx/site-confs/default
 
+# fix previous installations of ownCloud nginx
+sed -i s#php7.0#php$PHP_VERS#g /config/nginx/site-confs/default
+sed -i s#php7.0#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
+
 # start redis server
 service redis-server start
 
