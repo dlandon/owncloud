@@ -19,11 +19,14 @@ sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mysqld_safe
 [[ ! -L /etc/mysql/conf.d/custom.cnf && -f /etc/mysql/conf.d/custom.cnf ]] && rm /etc/mysql/conf.d/custom.cnf
 [[ ! -L /etc/mysql/conf.d/custom.cnf ]] && ln -s /config/custom.cnf /etc/mysql/conf.d/custom.cnf
 
-
 # configure nginx
 [[ ! -f /config/nginx/nginx.conf ]] && cp /defaults/nginx.conf /config/nginx/nginx.conf
 [[ ! -f /config/nginx/nginx-fpm.conf ]] && cp /defaults/nginx-fpm.conf /config/nginx/nginx-fpm.conf
 [[ ! -f /config/nginx/site-confs/default ]] && cp /defaults/default /config/nginx/site-confs/default
+
+# fix previous installations of ownCloud nginx
+sed -i s#php7.0#php$PHP_VERS#g /config/nginx/site-confs/default
+sed -i s#php7.0#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
 
 # start redis server
 service redis-server start
@@ -43,3 +46,4 @@ fi
 chown -R abc:abc /var/run/php /var/run/redis
 chmod -R 777 /var/run/mysqld
 chmod 770 /etc/mysql/conf.d/custom.cnf
+chmod -R 770 /config/nginx

@@ -1,4 +1,4 @@
-OwnCloud provides universal access to your files via the web, your computer or your mobile devices — wherever you are. Mariadb 10.3 is built into the image. Built with php7, mariadb 10.3 and nginx 1.13.3. [Owncloud.](https://owncloud.org/)
+OwnCloud provides universal access to your files via the web, your computer or your mobile devices — wherever you are. Mariadb 10.3 is built into the image. Built with php 7.1, mariadb 10.3 and nginx 1.13.3. [Owncloud.](https://owncloud.org/)
 
 ## Usage
 
@@ -49,7 +49,6 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 * IMPORTANT, because the database is built into the container, the database host is localhost and the database user and the database itself are both owncloud.
 *  If you do not set the DB_PASS variable, the database password will default to owncloud.
 * IMPORTANT, if you use your own keys name them cert.key and cert.crt, and place them in config/keys folder.
-* Edit the /config/www/owncloud/lib/base.php file and change the UTC timezone reference to your local timezone for ownCloud to be on the right timezone.  You'll have to go into the docker and use nano to change.
 ## Info
 
 * Shell access whilst the container is running: `docker exec -it ownCloud /bin/bash`
@@ -60,7 +59,8 @@ Changes:
 
 2017-12-16
 - Update mariadb to 10.3.
-- Upgrade initial ownCloud install to 10.0.4.
+- Update php to 7.1.
+- Update initial ownCloud install to 10.0.4.
 
 2017-11-30
 - Update base image.
