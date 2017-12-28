@@ -6,14 +6,14 @@ ENV MYSQL_DIR="/config"
 ENV	DATADIR="$MYSQL_DIR/database"
 ENV	OWNCLOUD_VERS="10.0.4"
 ENV	PHP_VERS="7.0"
-ENV	MARIADB_VERS="10.3"
+ENV	MARIADB_VERS="10.3.2"
 
 COPY services/ /etc/service/
 COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
 
-RUN	add-apt-repository 'deb http://lon1.mirrors.digitalocean.com/mariadb/repo/10.3/ubuntu xenial main' && \
-	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 F1656F24C74CD1D8
+RUN	add-apt-repository 'deb http://mirror.lstn.net/mariadb//mariadb-10.3.2/repo/ubuntu xenial main' && \
+	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
 
 RUN	echo "deb http://ppa.launchpad.net/nginx/development/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list && \
 	echo "deb-src http://ppa.launchpad.net/nginx/development/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list && \
@@ -34,7 +34,7 @@ RUN	apt-get -y install mariadb-server mysqltuner && \
 	apt-get -y install php$PHP_VERS-common php$PHP_VERS-curl php$PHP_VERS-fpm php$PHP_VERS-gd php$PHP_VERS-gmp php$PHP_VERS-imap php$PHP_VERS-intl php$PHP_VERS-ldap && \
 	apt-get -y install php$PHP_VERS-mbstring php$PHP_VERS-mcrypt php$PHP_VERS-mysql php$PHP_VERS-opcache php$PHP_VERS-xml php$PHP_VERS-xmlrpc php$PHP_VERS-zip && \
 	apt-get -y install php-imagick pkg-config smbclient re2c ssl-cert && \
-	apt-get -y install redis-server php-redis php$PHP_VERS-dev
+	apt-get -y install redis-server php-redis php$PHP_VERS-dev sudo
 
 RUN	git clone git://github.com/eduardok/libsmbclient-php.git /tmp/smbclient && \
 	cd /tmp/smbclient && \

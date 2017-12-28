@@ -57,6 +57,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
+2017-12-28
+- Force mariadb to version 10.3.2 and don't allow mariadb updates.
+
 2017-12-18
 - Revert to php 7.0 because of some app incompatibility.
 
