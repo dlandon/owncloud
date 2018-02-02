@@ -4,8 +4,8 @@ LABEL maintainer="dlandon"
 
 ENV MYSQL_DIR="/config"
 ENV	DATADIR="$MYSQL_DIR/database"
-ENV	OWNCLOUD_VERS="10.0.4"
-ENV	PHP_VERS="7.0"
+ENV	OWNCLOUD_VERS="10.0.6"
+ENV	PHP_VERS="7.1"
 ENV	MARIADB_VERS="10.3.2"
 
 COPY services/ /etc/service/
