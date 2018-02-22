@@ -57,8 +57,12 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 * To monitor the logs of the container in realtime: `docker logs -f ownCloud`
 
 Changes:
+
+2018-02-21
+- Update initial ownCloud install to 10.0.7.
+
 2018-02-08
-- Update self signed certificate genereation.
+- Update self signed certificate generation.
 
 2018-02-02
 - Update initial ownCloud install to 10.0.6.
