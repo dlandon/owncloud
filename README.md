@@ -58,6 +58,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
+2018-03-03
+- Update to phusion 10.0.
+
 2018-02-21
 - Update initial ownCloud install to 10.0.7.
 
