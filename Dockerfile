@@ -12,7 +12,7 @@ COPY services/ /etc/service/
 COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
 
-RUN	add-apt-repository 'deb http://mirror.lstn.net/mariadb//mariadb-10.3.2/repo/ubuntu xenial main' && \
+RUN	add-apt-repository 'deb https://downloads.mariadb.com/MariaDB/mariadb-10.3.2/repo/ubuntu/ xenial main' && \
 	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
 
 RUN	echo "deb http://ppa.launchpad.net/nginx/development/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list && \
