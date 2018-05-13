@@ -1,4 +1,4 @@
-OwnCloud provides universal access to your files via the web, your computer or your mobile devices — wherever you are. Mariadb 10.3 is built into the image. Built with php 7.0, mariadb 10.3 and nginx 1.13.3. [Owncloud.](https://owncloud.org/)
+OwnCloud provides universal access to your files via the web, your computer or your mobile devices — wherever you are. Mariadb 10.3 is built into the image. Built with php 7.1, mariadb 10.3 and nginx 1.13. [Owncloud.](https://owncloud.org/)
 
 ## Usage
 
@@ -57,6 +57,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 * To monitor the logs of the container in realtime: `docker logs -f ownCloud`
 
 Changes:
+
+2018-05-12
+- Undate initial ownCloud install to 10.0.8.
 
 2018-04-10
 - Change mariadb repo to the official repo.
