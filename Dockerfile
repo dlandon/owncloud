@@ -6,14 +6,15 @@ ENV MYSQL_DIR="/config"
 ENV	DATADIR="$MYSQL_DIR/database"
 ENV	OWNCLOUD_VERS="10.0.9"
 ENV	PHP_VERS="7.1"
-ENV	MARIADB_VERS="10.3.8"
+ENV	MARIADB_VERS="10.3"
 
 COPY services/ /etc/service/
 COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
 
-RUN	add-apt-repository 'deb https://downloads.mariadb.com/MariaDB/mariadb-10.3.8/repo/ubuntu/ xenial main' && \
-	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8
+RUN apt-get install software-properties-common && \
+	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 && \
+	add-apt-repository 'deb [arch=amd64,arm64,i386,ppc64el] http://mirror.jaleco.com/mariadb/repo/10.3/ubuntu xenial main'
 
 RUN	echo "deb http://ppa.launchpad.net/nginx/development/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list && \
 	echo "deb-src http://ppa.launchpad.net/nginx/development/ubuntu xenial main" >> /etc/apt/sources.list.d/nginx.list && \
