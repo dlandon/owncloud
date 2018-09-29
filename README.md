@@ -58,6 +58,10 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
+2018-09-29
+- Undate initial ownCloud install to 10.0.10.
+- Update mariadb to stable release 10.3.9.
+
 2018-08-20
 - Undate initial ownCloud install to 10.0.9.
 - Update mariadb to stable release 10.3.8.
