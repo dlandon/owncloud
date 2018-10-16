@@ -58,6 +58,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
+2018-10-15
+- Some docker file cleanup.
+
 2018-10-07
 - Update mariadb to stable release 10.3.10.
 
