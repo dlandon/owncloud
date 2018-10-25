@@ -18,14 +18,15 @@ RUN	add-apt-repository -y https://downloads.mariadb.com/MariaDB/mariadb-$MARIADB
 	add-apt-repository ppa:nginx/development && \
 	apt-get update && \
 	apt-get -y upgrade && \
-	apt-get -y dist-upgrade
+	apt-get -y dist-upgrade && \
+	apt-get -y remove apache2
 
-RUN	apt-get -y install php$PHP_VERS mariadb-server mysqltuner sudo && \
+RUN	apt-get -y install php$PHP_VERS php$PHP_VERS-fpm php$PHP_VERS-cli php$PHP_VERS-apcu mariadb-server mysqltuner sudo && \
 	apt-get -y install exim4 exim4-base exim4-config exim4-daemon-light heirloom-mailx jq libaio1 libapr1 && \
 	apt-get -y install libaprutil1 libaprutil1-dbd-sqlite3 libaprutil1-ldap libdbd-mysql-perl libdbi-perl libfreetype6 && \
-	apt-get -y install libmysqlclient18 libpcre3-dev nano nginx openssl php$PHP_VERS-bz2 php$PHP_VERS-cli && \
-	apt-get -y install php$PHP_VERS-common php$PHP_VERS-curl php$PHP_VERS-fpm php$PHP_VERS-gd php$PHP_VERS-gmp php$PHP_VERS-imap php$PHP_VERS-intl php$PHP_VERS-ldap && \
-	apt-get -y install php$PHP_VERS-mbstring php$PHP_VERS-mcrypt php$PHP_VERS-mysql php$PHP_VERS-xml php$PHP_VERS-xmlrpc php$PHP_VERS-zip php$PHP_VERS-apcu && \
+	apt-get -y install libmysqlclient18 libpcre3-dev nginx openssl php$PHP_VERS-bz2 php$PHP_VERS-mysql php$PHP_VERS-curl && \
+	apt-get -y install php$PHP_VERS-gd php$PHP_VERS-gmp php$PHP_VERS-imap php$PHP_VERS-intl php$PHP_VERS-ldap && \
+	apt-get -y install php$PHP_VERS-mbstring php$PHP_VERS-mcrypt php$PHP_VERS-xml php$PHP_VERS-xmlrpc php$PHP_VERS-zip && \
 	apt-get -y install php-imagick pkg-config smbclient re2c ssl-cert && \
 	apt-get -y install redis-server php-redis
 
