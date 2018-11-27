@@ -31,7 +31,7 @@ http://192.168.x.x:8080 would show you what's running INSIDE the container on po
 * `-e TZ` timezone information -eg Europe/London
 * `-e DB_PASS` ownCloud database password - see below for explanation
 
-It is based on phusion baseimage  with ssh removed, for shell access whilst the container is running do `docker exec -it ownCloud /bin/bash`.
+It is based on phusion baseimage with ssh removed, for shell access whilst the container is running do `docker exec -it ownCloud /bin/bash`.
 
 ### User / Group Identifiers
 
@@ -57,6 +57,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 * To monitor the logs of the container in realtime: `docker logs -f ownCloud`
 
 Changes:
+
+2018-10-26
+- Update mariadb to stable release 10.3.11.
 
 2018-10-25
 - Some docker file cleanup.
