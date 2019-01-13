@@ -11,4 +11,3 @@ else
 fi
 
 chown abc:abc -R /config/keys
-chmod 660 /config/keys

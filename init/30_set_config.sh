@@ -28,11 +28,6 @@ sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mysqld_safe
 sed -i s#php7.0#php$PHP_VERS#g /config/nginx/site-confs/default
 sed -i s#php7.0#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
 
-# Linux adjustments for redis
-sysctl -w net.core.somaxconn=511 > /dev/null
-sysctl -w vm.overcommit_memory=1 > /dev/null
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-
 # start redis server
 service redis-server start
 
@@ -49,5 +44,6 @@ if [ `stat -c '%a' /data` != '770' ]; then
 fi
 
 chown -R abc:abc /var/run/php /var/run/redis
+chmod -R 777 /var/run/mysqld
 chmod 770 /etc/mysql/conf.d/custom.cnf
 chmod -R 770 /config/nginx
