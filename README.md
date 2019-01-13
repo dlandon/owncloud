@@ -5,13 +5,14 @@ OwnCloud provides universal access to your files via the web, your computer or y
 ```
 docker create \
 --name=ownCloud \
+-p 443:443 \
 -v <path to config>:/config \
 -v <path to data>:/data \
 -e PGID=<gid> \
 -e PUID=<uid> \
 -e TZ=<timezone> \
 -e DB_PASS=<password> \
--p 443:443 \
+--privileged \
 owncloud
 ```
 
@@ -57,6 +58,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 * To monitor the logs of the container in realtime: `docker logs -f ownCloud`
 
 Changes:
+
+2019-01-13
+- Changes to address Redis performance.
 
 2019-01-12
 - Update mariadb to stable release 10.3.12.

@@ -80,10 +80,6 @@ if [ ! -d "$DATADIR/mysql" ]; then
 	chown -R abc:abc "$MYSQL_DIR" /config/log/mysql
 fi
 
-# own the folder the pid for mysql runs in
-chown -R abc:abc /var/run/mysqld
-
-
 # clean up any old install files from /tmp
 if [ -f "/tmp/no-pass.nfo" ]; then
 	rm /tmp/no-pass.nfo
@@ -92,6 +88,3 @@ fi
 if [ -f "/tmp/mysql-first-time.sql" ]; then
 	rm /tmp/mysql-first-time.sql
 fi
-
-crontab /defaults/owncloud
-chown -R abc:abc /config

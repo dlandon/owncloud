@@ -11,9 +11,9 @@ if [ ! -f "/config/www/owncloud/index.php" ]; then
 	tar -xjf /tmp/owncloud-$OWNCLOUD_VERS.tar.bz2 -C /config/www/owncloud  --strip-components=1
 	rm -r /tmp/owncloud-$OWNCLOUD_VERS.tar.bz2
 	apt-get -y purge --remove wget
+
+	chown -R abc:abc /config/www/owncloud
+	chmod -R 770 /config/www/owncloud
+
+	cp /config/www/owncloud/core/img/favicon.ico /config/www/owncloud/favicon.ico
 fi
-
-cp /config/www/owncloud/core/img/favicon.ico /config/www/owncloud/favicon.ico
-
-chown -R abc:abc /config/www/owncloud
-chmod -R 777 /config/www/owncloud
