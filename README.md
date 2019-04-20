@@ -1,4 +1,4 @@
-OwnCloud provides universal access to your files via the web, your computer or your mobile devices wherever you are. Mariadb is built into the image. Built with php 7.1, mariadb 10.3.8 and nginx 1.15. [Owncloud.](https://owncloud.org/)
+OwnCloud provides universal access to your files via the web, your computer or your mobile devices wherever you are. Mariadb is built into the image. Built with php 7.1, mariadb 10.3 and nginx 1.15. [Owncloud.](https://owncloud.org/)
 
 ## Usage
 

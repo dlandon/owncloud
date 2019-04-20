@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# Update databases
+# Upgrade databases
 logger "Upgrading databases..." -tmariadb
 logger "`/usr/bin/mysql_upgrade --password=$DB_PASS`" -tmariadb
+logger "Databases upgraded." -tmariadb
 
 # Remove the script if successfully upgraded the databases
 if [ $? -eq 0 ]; then
