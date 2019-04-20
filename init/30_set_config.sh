@@ -36,6 +36,9 @@ echo never > /sys/kernel/mm/transparent_hugepage/enabled
 # start redis server
 service redis-server start
 
+# start at
+service atd start
+
 # Check the ownership on the /data directory
 if [ `stat -c '%U:%G' /data` != 'abc:users' ]; then
 	echo "Correcting /data ownership..."
@@ -48,8 +51,8 @@ if [ `stat -c '%a' /data` != '770' ]; then
 	chmod -R 770 /data
 fi
 
-chown -R abc:abc /var/run/php /var/run/redis /var/run/mysql
-chmod -R 777 /var/run/mysqld
+chown -R abc:abc /var/run/php /var/run/redis /var/run/mysqld
+chmod -R 755 /var/run/mysqld
 
 chmod 770 /etc/mysql/conf.d/custom.cnf
 chmod -R 770 /config/nginx

@@ -6,11 +6,12 @@ ENV MYSQL_DIR="/config"
 ENV	DATADIR="$MYSQL_DIR/database"
 ENV	OWNCLOUD_VERS="10.0.10"
 ENV	PHP_VERS="7.1"
-ENV	MARIADB_VERS="10.3.12"
+ENV	MARIADB_VERS="10.3.14"
 
 COPY services/ /etc/service/
 COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
+COPY upgrade_db /root/
 
 RUN	add-apt-repository -y https://downloads.mariadb.com/MariaDB/mariadb-$MARIADB_VERS/repo/ubuntu && \
 	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 && \
@@ -28,7 +29,7 @@ RUN	apt-get -y install php$PHP_VERS php$PHP_VERS-fpm php$PHP_VERS-cli php$PHP_VE
 	apt-get -y install php$PHP_VERS-gd php$PHP_VERS-gmp php$PHP_VERS-imap php$PHP_VERS-intl php$PHP_VERS-ldap && \
 	apt-get -y install php$PHP_VERS-mbstring php$PHP_VERS-mcrypt php$PHP_VERS-xml php$PHP_VERS-xmlrpc php$PHP_VERS-zip && \
 	apt-get -y install php-imagick pkg-config smbclient re2c ssl-cert && \
-	apt-get -y install redis-server php-redis
+	apt-get -y install redis-server php-redis at
 
 RUN	cd / && \
 	apt-get -y autoremove && \
@@ -37,7 +38,7 @@ RUN	cd / && \
 	update-rc.d -f mysql-common remove && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /var/lib/mysql && \
 	mkdir -p /var/lib/mysql && \
-	chmod -v +x /etc/service/*/run /etc/my_init.d/*.sh && \
+	chmod -c +x /etc/service/*/run /etc/my_init.d/*.sh /root/upgrade_db && \
 	mkdir -p /var/run/redis && \
 	sed -i -e 's/port 6379/port 0/g' /etc/redis/redis.conf && \
 	sed -i -e 's/# unixsocket/unixsocket/g' /etc/redis/redis.conf && \

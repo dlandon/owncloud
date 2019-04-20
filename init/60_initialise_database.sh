@@ -88,3 +88,8 @@ fi
 if [ -f "/tmp/mysql-first-time.sql" ]; then
 	rm /tmp/mysql-first-time.sql
 fi
+
+# Upgrade the databases after the system has started on first run of docker
+if [ -f "/root/upgrade_db" ]; then
+	at -M -f /root/upgrade_db now + 5 minutes 2>/dev/null
+fi
