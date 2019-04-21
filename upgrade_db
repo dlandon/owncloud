@@ -1,11 +1,18 @@
 #!/bin/bash
 
+# Wait for mysql to start
+sleep 300
+
 # Upgrade databases
 logger "Upgrading databases..." -tmariadb
-logger "`/usr/bin/mysql_upgrade --password=$DB_PASS`" -tmariadb
-logger "Databases upgraded." -tmariadb
+/usr/bin/mysql_upgrade --password=$DB_PASS &> /tmp/result
 
 # Remove the script if successfully upgraded the databases
-if [ $? -eq 0 ]; then
-	rm /root/upgrade_db
+if [[ `grep "Upgrade failed" /tmp/result` != "" ]]; then
+	logger "Error: Databases failed to upgrade - check 'DB_PASS' password." -tmariadb
+else
+	logger "`cat /tmp/result`" -tmariadb
+	rm -f /root/upgrade_db
 fi
+
+rm -f /tmp/result

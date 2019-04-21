@@ -91,5 +91,5 @@ fi
 
 # Upgrade the databases after the system has started on first run of docker
 if [ -f "/root/upgrade_db" ]; then
-	at -M -f /root/upgrade_db now + 5 minutes 2>/dev/null
+	/root/upgrade_db &
 fi

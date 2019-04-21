@@ -2,7 +2,7 @@ FROM dlandon/owncloud-baseimage
 
 LABEL maintainer="dlandon"
 
-ENV MYSQL_DIR="/config"
+ENV	MYSQL_DIR="/config"
 ENV	DATADIR="$MYSQL_DIR/database"
 ENV	OWNCLOUD_VERS="10.0.10"
 ENV	PHP_VERS="7.1"
@@ -29,7 +29,7 @@ RUN	apt-get -y install php$PHP_VERS php$PHP_VERS-fpm php$PHP_VERS-cli php$PHP_VE
 	apt-get -y install php$PHP_VERS-gd php$PHP_VERS-gmp php$PHP_VERS-imap php$PHP_VERS-intl php$PHP_VERS-ldap && \
 	apt-get -y install php$PHP_VERS-mbstring php$PHP_VERS-mcrypt php$PHP_VERS-xml php$PHP_VERS-xmlrpc php$PHP_VERS-zip && \
 	apt-get -y install php-imagick pkg-config smbclient re2c ssl-cert && \
-	apt-get -y install redis-server php-redis at
+	apt-get -y install redis-server php-redis
 
 RUN	cd / && \
 	apt-get -y autoremove && \

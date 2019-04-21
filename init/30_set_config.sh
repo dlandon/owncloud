@@ -36,9 +36,6 @@ echo never > /sys/kernel/mm/transparent_hugepage/enabled
 # start redis server
 service redis-server start
 
-# start at
-service atd start
-
 # Check the ownership on the /data directory
 if [ `stat -c '%U:%G' /data` != 'abc:users' ]; then
 	echo "Correcting /data ownership..."
