@@ -14,6 +14,4 @@ if [ ! -f "/config/www/owncloud/index.php" ]; then
 
 	chown -R abc:abc /config/www/owncloud
 	chmod -R 755 /config/www/owncloud
-
-	cp /config/www/owncloud/core/img/favicon.ico /config/www/owncloud/favicon.ico
 fi
