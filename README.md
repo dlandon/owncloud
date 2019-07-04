@@ -60,6 +60,7 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 Changes:
 
 2019-07-04
+- Update initial ownCloud install to 10.2.1.
 - Update mariadb to stable release 10.3.16.
 
 2019-06-10
