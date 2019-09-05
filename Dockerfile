@@ -18,8 +18,8 @@ RUN	add-apt-repository -y https://downloads.mariadb.com/MariaDB/mariadb-$MARIADB
 	add-apt-repository ppa:ondrej/php && \
 	add-apt-repository ppa:nginx/development && \
 	apt-get update && \
-	apt-get -y upgrade && \
-	apt-get -y dist-upgrade && \
+	apt-get -y upgrade -o Dpkg::Options::="--force-confold" && \
+	apt-get -y dist-upgrade -o Dpkg::Options::="--force-confold" && \
 	apt-get -y remove apache2
 
 RUN	apt-get -y install php$PHP_VERS php$PHP_VERS-fpm php$PHP_VERS-cli php$PHP_VERS-apcu mariadb-server mysqltuner sudo && \
