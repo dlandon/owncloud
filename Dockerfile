@@ -6,7 +6,7 @@ ENV	MYSQL_DIR="/config"
 ENV	DATADIR="$MYSQL_DIR/database"
 ENV	OWNCLOUD_VERS="10.2.1"
 ENV	PHP_VERS="7.1"
-ENV	MARIADB_VERS="10.3.16"
+ENV	MARIADB_VERS="10.3.17"
 
 COPY services/ /etc/service/
 COPY defaults/ /defaults/
@@ -19,7 +19,6 @@ RUN	add-apt-repository -y https://downloads.mariadb.com/MariaDB/mariadb-$MARIADB
 	add-apt-repository ppa:nginx/development && \
 	apt-get update && \
 	apt-get -y upgrade -o Dpkg::Options::="--force-confold" && \
-	apt-get -y dist-upgrade -o Dpkg::Options::="--force-confold" && \
 	apt-get -y remove apache2
 
 RUN	apt-get -y install php$PHP_VERS php$PHP_VERS-fpm php$PHP_VERS-cli php$PHP_VERS-apcu mariadb-server mysqltuner sudo && \
