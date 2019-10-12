@@ -6,7 +6,7 @@ ENV	MYSQL_DIR="/config"
 ENV	DATADIR="$MYSQL_DIR/database"
 ENV	OWNCLOUD_VERS="10.2.1"
 ENV	PHP_VERS="7.1"
-ENV	MARIADB_VERS="10.3.17"
+ENV	MARIADB_VERS="10.3.18"
 
 COPY services/ /etc/service/
 COPY defaults/ /defaults/
