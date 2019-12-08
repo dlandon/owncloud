@@ -58,6 +58,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 * To monitor the logs of the container in realtime: `docker logs -f ownCloud`
 
 Changes:
+2019-12-08
+- Update initial ownCloud install to 10.3.2.
+- Update mariadb to stable release 10.3.20.
 
 2019-10-30
 - Update initial ownCloud install to 10.3.
