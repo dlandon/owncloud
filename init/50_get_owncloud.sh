@@ -11,7 +11,12 @@ if [ ! -f "/config/www/owncloud/index.php" ]; then
 	tar -xjf /tmp/owncloud-$OWNCLOUD_VERS.tar.bz2 -C /config/www/owncloud  --strip-components=1
 	rm -r /tmp/owncloud-$OWNCLOUD_VERS.tar.bz2
 	apt-get -y purge --remove wget
-
-	chown -R abc:abc /config/www/owncloud
-	chmod -R 755 /config/www/owncloud
 fi
+
+# fix permissions.
+chown -R "root:abc" "/config/www/owncloud/"
+chown -R "abc:abc" "/config/www/owncloud/apps/"
+chown -R "abc:abc" "/config/www/owncloud/apps-external/"
+chown -R "abc:abc" "/config/www/owncloud/config/"
+chown -R "abc:abc" "/config/www/owncloud/updater/"
+chmod +x "/config/www/owncloud/occ"

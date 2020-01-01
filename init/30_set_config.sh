@@ -27,6 +27,12 @@ sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mysqld_safe
 # fix previous installations of ownCloud nginx
 sed -i s#php7.0#php$PHP_VERS#g /config/nginx/site-confs/default
 sed -i s#php7.0#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
+sed -i s#php7.1#php$PHP_VERS#g /config/nginx/site-confs/default
+sed -i s#php7.1#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
+sed -i s#php7.2#php$PHP_VERS#g /config/nginx/site-confs/default
+sed -i s#php7.2#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
+sed -i s#php7.3#php$PHP_VERS#g /config/nginx/site-confs/default
+sed -i s#php7.3#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
 
 # Linux adjustments for redis
 sysctl -w net.core.somaxconn=511 > /dev/null
