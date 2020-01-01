@@ -1,4 +1,5 @@
 upstream php-handler {
+  server unix:/var/run/php/php7.1-fpm.sock;
 }
 
 server {
