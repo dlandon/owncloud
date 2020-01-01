@@ -22,7 +22,7 @@ RUN	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24
 	apt-get -y remove apache2
 
 RUN	apt-get -y install nginx mariadb-server mysqltuner libmysqlclient18 libpcre3-dev && \
-	apt-get -y install php$PHP_VERS php$PHP_VERS-fpm php$PHP_VERS-cli php$PHP_VERS-apcu && \
+	apt-get -y install php$PHP_VERS php$PHP_VERS-fpm php$PHP_VERS-cli php$PHP_VERS-common php$PHP_VERS-apcu && \
 	apt-get -y install php$PHP_VERS-bz2 php$PHP_VERS-mysql php$PHP_VERS-curl && \
 	apt-get -y install php$PHP_VERS-gd php$PHP_VERS-gmp php$PHP_VERS-imap php$PHP_VERS-intl php$PHP_VERS-ldap && \
 	apt-get -y install php$PHP_VERS-mbstring php$PHP_VERS-xml php$PHP_VERS-xmlrpc php$PHP_VERS-zip && \
