@@ -1,1 +1,1 @@
-*/15  *  *  *  * cd /config/www/owncloud/ && /sbin/setuser abc php -f ./cron.php &>/dev/null
+*/15  *  *  *  * /sbin/setuser abc php /config/www/owncloud/occ system:cron &>/dev/null

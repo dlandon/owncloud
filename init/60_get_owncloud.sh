@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 50_get_owncloud.sh
+# 60_get_owncloud.sh
 #
 
 # is ownCloud already installed?
@@ -13,7 +13,7 @@ if [ ! -f "/config/www/owncloud/index.php" ]; then
 	apt-get -y purge --remove wget
 fi
 
-# fix permissions.
+# Set file permissions.
 chown -R "root:abc" "/config/www/owncloud/"
 chown -R "abc:abc" "/config/www/owncloud/apps/"
 chown -R "abc:abc" "/config/www/owncloud/apps-external/"

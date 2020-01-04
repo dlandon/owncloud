@@ -59,9 +59,16 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
+2019-01-04
+- Update to Phusion 0.11 (Ubuntu 18.04LTS).
+- Update cron task.
+
 2020-01-01
 - Some cleanup.
 - Switch to a mariadb 10.3 repository so it will be updated automatically.
+
+2019-12-31
+- Update to php 7.3.
 
 2019-12-08
 - Update initial ownCloud install to 10.3.2.

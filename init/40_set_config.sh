@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 30_set_config.sh
+# 40_set_config.sh
 #
 
 # make folders if required
@@ -33,14 +33,6 @@ sed -i s#php7.2#php$PHP_VERS#g /config/nginx/site-confs/default
 sed -i s#php7.2#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
 sed -i s#php7.3#php$PHP_VERS#g /config/nginx/site-confs/default
 sed -i s#php7.3#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
-
-# Linux adjustments for redis
-sysctl -w net.core.somaxconn=511 > /dev/null
-sysctl -w vm.overcommit_memory=1 > /dev/null
-echo never > /sys/kernel/mm/transparent_hugepage/enabled
-
-# start redis server
-service redis-server start
 
 # Check the ownership on the /data directory
 if [ `stat -c '%U:%G' /data` != 'abc:users' ]; then

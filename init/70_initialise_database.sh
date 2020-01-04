@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 60_initialise_database.sh
+# 70_initialise_database.sh
 #
 
 # set start function that creates user and password, used later

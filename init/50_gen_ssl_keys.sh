@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 40_gen_ssl_keys.sh
+# 50_gen_ssl_keys.sh
 #
 
 if [[ -f /config/keys/cert.key && -f /config/keys/cert.crt ]]; then
