@@ -16,6 +16,7 @@ fi
 # Set file permissions.
 chown -R "root:abc" "/config/www/owncloud/"
 chown -R "abc:abc" "/config/www/owncloud/apps/"
+mkdir -p /config/www/owncloud/apps-external
 chown -R "abc:abc" "/config/www/owncloud/apps-external/"
 chown -R "abc:abc" "/config/www/owncloud/config/"
 chown -R "abc:abc" "/config/www/owncloud/updater/"
