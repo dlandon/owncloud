@@ -59,7 +59,10 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 Changes:
 
-2019-01-04
+2020-01-05
+- Remove TLSv1.0 and TLSv1.1 from nginx.conf.
+
+2020-01-04
 - Update to Phusion 0.11 (Ubuntu 18.04LTS).
 - Update cron task.
 
