@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# 80_final_setup.sh
+# 80_first_run.sh
 #
 
 [[ ! -f /config/www/owncloud/config/config.php ]] && cp /defaults/config.php /config/www/owncloud/config/config.php

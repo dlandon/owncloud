@@ -1,6 +1,11 @@
-FROM dlandon/owncloud-baseimage
+FROM phusion/baseimage:0.11
 
 LABEL maintainer="dlandon"
+
+ENV DEBIAN_FRONTEND="noninteractive" \
+	DISABLE_SSH="true" \
+	HOME="/root" \
+	TERM="xterm"
 
 ENV	MYSQL_DIR="/config"
 ENV	DATADIR="$MYSQL_DIR/database" \
@@ -20,7 +25,9 @@ RUN	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24
 	apt-get update && \
 	apt-get -y upgrade -o Dpkg::Options::="--force-confold"
 
-RUN	apt-get -y install nginx mariadb-server mysqltuner libmysqlclient18 libpcre3-dev && \
+RUN	useradd -u 911 -U -d /config -s /bin/false abc && \
+	usermod -G users abc && \
+	apt-get -y install nginx mariadb-server mysqltuner libmysqlclient18 libpcre3-dev && \
 	apt-get -y install php$PHP_VERS php$PHP_VERS-fpm php$PHP_VERS-cli php$PHP_VERS-common php$PHP_VERS-apcu && \
 	apt-get -y install php$PHP_VERS-bz2 php$PHP_VERS-mysql php$PHP_VERS-curl && \
 	apt-get -y install php$PHP_VERS-gd php$PHP_VERS-gmp php$PHP_VERS-imap php$PHP_VERS-intl php$PHP_VERS-ldap && \
@@ -46,3 +53,5 @@ RUN	cd / && \
 EXPOSE 443
 
 VOLUME /config /data
+
+CMD ["/sbin/my_init"]
