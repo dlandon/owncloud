@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND="noninteractive" \
 ENV	MYSQL_DIR="/config"
 ENV	DATADIR="$MYSQL_DIR/database" \
 	OWNCLOUD_VERS="10.3.2" \
-	PHP_VERS="7.3" \
+	PHP_VERS="7.1" \
 	MARIADB_VERS="10.3"
 
 COPY services/ /etc/service/
