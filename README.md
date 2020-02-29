@@ -57,7 +57,8 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 * Upgrade ownCloud from the webui, `Daily branch does not work, so just don't...`
 * To monitor the logs of the container in realtime: `docker logs -f ownCloud`
 
-Changes:
+### Change Log:
+
 2020-02-29
 - Fix docker failure when it can't update.
 
