@@ -58,6 +58,8 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 * To monitor the logs of the container in realtime: `docker logs -f ownCloud`
 
 Changes:
+2020-02-29
+- Fix docker failure when it can't update.
 
 2020-01-05
 - Remove TLSv1.0 and TLSv1.1 from nginx.conf.
