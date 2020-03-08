@@ -59,6 +59,9 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 
 ### Change Log:
 
+2020-03-08
+- Update initial ownCloud install to 10.4.0.
+
 2020-02-29
 - Fix docker failure when it can't update.
 
