@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2020-04-25
+- Update initial ownCloud install to 10.4.1.
+
 ### 2020-03-08
 - Update initial ownCloud install to 10.4.0.
 
