@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2020-08-06
+- Update initial ownCloud install to 10.5.0.
+
 ### 2020-07-19
 - Update baseimage to bionic-1.0.0.
 
