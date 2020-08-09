@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2020-08-09
+- Add cifs-utils package for mounting external CIFS mounts.
+
 ### 2020-08-08
 - Add missing module for 'External Storage: Windows Network Drives' (CIFS).
 

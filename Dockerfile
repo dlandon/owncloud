@@ -34,7 +34,7 @@ RUN	useradd -u 911 -U -d /config -s /bin/false abc && \
 	apt-get -y install php$PHP_VERS-mbstring php$PHP_VERS-xml php$PHP_VERS-xmlrpc php$PHP_VERS-zip && \
 	apt-get -y install mcrypt exim4 exim4-base exim4-config exim4-daemon-light jq libaio1 libapr1 && \
 	apt-get -y install libaprutil1 libaprutil1-dbd-sqlite3 libaprutil1-ldap libdbd-mysql-perl libdbi-perl libfreetype6 && \
-	apt-get -y install php-imagick pkg-config smbclient php-smbclient re2c ssl-cert sudo openssl nano && \
+	apt-get -y install php-imagick pkg-config php-smbclient smbclient cifs-utils re2c ssl-cert sudo openssl nano && \
 	apt-get -y install redis-server php-redis
 
 RUN	cd / && \
