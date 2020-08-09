@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2020-08-08
+- Add missing module for 'External Storage: Windows Network Drives' (CIFS).
+
 ### 2020-08-06
 - Update initial ownCloud install to 10.5.0.
 
