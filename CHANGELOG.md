@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2020-10-18
+- Update to php 7.4.
+
 ### 2020-08-09
 - Remove unnecessary smbclient.
 
