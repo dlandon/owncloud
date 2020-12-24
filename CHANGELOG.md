@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2020-12-24
+- Update initial ownCloud install to 10.6.0.
+
 ### 2020-10-18
 - Update to php 7.4.
 
