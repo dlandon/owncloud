@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2021.01.03
+- Allow setting PHP version with PHP_VERS environmental variable.
+
 ### 2020-12-24
 - Update initial ownCloud install to 10.6.0.
 
