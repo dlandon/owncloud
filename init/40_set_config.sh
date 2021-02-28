@@ -27,17 +27,34 @@ sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mysqld_safe
 # Set the PHP version from the environment variable
 sed -i s#php7.0#php$PHP_VERS#g /config/nginx/site-confs/default
 sed -i s#php7.0#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
+
 sed -i s#php7.1#php$PHP_VERS#g /config/nginx/site-confs/default
 sed -i s#php7.1#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
+
 sed -i s#php7.2#php$PHP_VERS#g /config/nginx/site-confs/default
 sed -i s#php7.2#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
+
 sed -i s#php7.3#php$PHP_VERS#g /config/nginx/site-confs/default
 sed -i s#php7.3#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
+
 sed -i s#php7.4#php$PHP_VERS#g /config/nginx/site-confs/default
 sed -i s#php7.4#php$PHP_VERS#g /config/nginx/nginx-fpm.conf
 
 # Switch php cli
 update-alternatives --set php /usr/bin/php$PHP_VERS
+
+# Install the proper version of php-redis
+if [ "`php -m | grep redis`" = "" ]; then
+	apt-get -y install php-pear php$PHP_VERS-dev
+	pecl uninstall redis
+	pecl install redis
+	apt-get -y remove php-pear php$PHP_VERS-dev
+
+	echo "extension=redis.so" > /etc/php/$PHP_VERS/mods-available/redis.ini
+	phpenmod -v $PHP_VERS -s ALL redis
+
+	apt-get -y autoremove
+fi
 
 # Check the ownership on the /data directory
 if [ `stat -c '%U:%G' /data` != 'abc:users' ]; then

@@ -5,7 +5,7 @@ docker run -d --name="ownCloud" \
 -e TZ="America/New_York" \
 -e PUID="99" \
 -e PGID="100" \
--e PHP_VERS="7.2" \
+-e PHP_VERS="7.4" \
 -e DB_PASS="owncloud" \
 -v "/mnt/cache/appdata/ownCloud":"/config":rw \
 -v "/mnt/cache/appdata/ownCloud/data":"/data":rw \

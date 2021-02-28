@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2021.02.27
+- Install php-redis for the current php version.
+
 ### 2021.01.03
 - Allow setting PHP version with PHP_VERS environmental variable.
 
