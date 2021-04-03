@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2021.04.03
+- Update initial ownCloud install to 10.7.0.
+
 ### 2021.02.27
 - Install php-redis for the current php version.
 

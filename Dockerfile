@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND="noninteractive" \
 
 ENV	MYSQL_DIR="/config"
 ENV	DATADIR="$MYSQL_DIR/database" \
-	OWNCLOUD_VERS="10.6.0" \
+	OWNCLOUD_VERS="10.7.0" \
 	PHP_VERS_2="7.2" \
 	PHP_VERS_3="7.3" \
 	PHP_VERS="7.4" \
