@@ -1,4 +1,4 @@
-FROM phusion/baseimage:bionic-1.0.0
+FROM phusion/baseimage:focal-1.0.0 as builder
 
 LABEL maintainer="dlandon"
 
@@ -15,18 +15,20 @@ ENV	DATADIR="$MYSQL_DIR/database" \
 	PHP_VERS="7.4" \
 	MARIADB_VERS="10.3"
 
+FROM builder as build1
 COPY services/ /etc/service/
 COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
 COPY upgrade_db /root/
 
+FROM build1 as build2
 RUN	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 && \
 	add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mirror.ufscar.br/mariadb/repo/10.3/ubuntu bionic main' && \
 	add-apt-repository ppa:ondrej/php && \
-	add-apt-repository ppa:nginx/development && \
 	apt-get update && \
 	apt-get -y upgrade -o Dpkg::Options::="--force-confold"
 
+FROM build2 as build3
 RUN	useradd -u 911 -U -d /config -s /bin/false abc && \
 	usermod -G users abc && \
 	apt-get -y install nginx mariadb-server mysqltuner libmysqlclient18 libpcre3-dev && \
@@ -48,6 +50,7 @@ RUN	useradd -u 911 -U -d /config -s /bin/false abc && \
 	apt-get -y install redis php-pear php$PHP_VERS-dev && \
 	pecl install redis
 
+FROM build3 as build4
 RUN	cd / && \
 	apt-get -y remove php-pear php$PHP_VERS-dev && \
 	apt-get -y autoremove && \
@@ -62,10 +65,15 @@ RUN	cd / && \
 	sed -i -e 's/# unixsocket/unixsocket/g' /etc/redis/redis.conf && \
 	echo "extension=redis.so" > /etc/php/$PHP_VERS/mods-available/redis.ini && \
 	phpenmod -v $PHP_VERS -s ALL redis && \
-	echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /defaults/nginx-fpm.conf
+	echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /defaults/nginx-fpm.conf && \
+	sed -i s#3.13#3.25#g /etc/syslog-ng/syslog-ng.conf && \
+	sed -i 's#use_dns(no)#use_dns(yes)#' /etc/syslog-ng/syslog-ng.conf
 
+FROM build4 as build5
 EXPOSE 443
 
+FROM build5 as build6
 VOLUME /config /data
 
+FROM build6
 CMD ["/sbin/my_init"]
