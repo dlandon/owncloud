@@ -3,13 +3,13 @@
 ### 2021-05-08
 - Update to Ubuntu 20.04.
 
-### 2021.04.03
+### 2021-04-03
 - Update initial ownCloud install to 10.7.0.
 
-### 2021.02.27
+### 2021-02-27
 - Install php-redis for the current php version.
 
-### 2021.01.03
+### 2021-01-03
 - Allow setting PHP version with PHP_VERS environmental variable.
 
 ### 2020-12-24
