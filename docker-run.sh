@@ -10,4 +10,4 @@ docker run -d --name="ownCloud" \
 -v "/mnt/cache/appdata/ownCloud":"/config":rw \
 -v "/mnt/cache/appdata/ownCloud/data":"/data":rw \
 --privileged \
-owncloud
+dlandon/owncloud

@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2021-08-03
+- Update initial ownCloud install to 10.8.0.
+
 ### 2021-05-08
 - Update to Ubuntu 20.04.
 
