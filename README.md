@@ -54,5 +54,5 @@ In this instance `PUID=1001` and `PGID=1001`. To find yours use `id user` as bel
 ## Info
 
 * Shell access whilst the container is running: `docker exec -it ownCloud /bin/bash`
-* Upgrade ownCloud from the webui, `Daily branch does not work, so just don't...`
+* Upgrade ownCloud from the webui does not work, so just don't...
 * To monitor the logs of the container in realtime: `docker logs -f ownCloud`
