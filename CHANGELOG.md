@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2021-09-28
+- Add imagick package for TOTP.
+
 ### 2021-08-03
 - Update initial ownCloud install to 10.8.0.
 
