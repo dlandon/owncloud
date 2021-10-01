@@ -8,3 +8,6 @@ chown abc:abc /config/www/owncloud/config/config.php
 chmod -R 660 /config/www/owncloud/config/*.php
 
 crontab /defaults/owncloud
+
+# Fix php sessions permission.
+chown abc:users /var/lib/php/sessions/

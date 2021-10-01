@@ -22,8 +22,8 @@ COPY init/ /etc/my_init.d/
 COPY upgrade_db /root/
 
 FROM build1 as build2
-RUN	apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 && \
-	add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mirror.ufscar.br/mariadb/repo/10.3/ubuntu bionic main' && \
+RUN	apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' && \
+	add-apt-repository 'deb [arch=amd64,arm64,ppc64el] http://mariadb.mirror.globo.tech/repo/10.3/ubuntu focal main' && \
 	add-apt-repository ppa:ondrej/php && \
 	apt-get update && \
 	apt-get -y upgrade -o Dpkg::Options::="--force-confold"

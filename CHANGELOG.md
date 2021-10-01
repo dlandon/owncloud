@@ -1,5 +1,9 @@
 ## Change Log
 
+### 2021-10-01
+- Change mariadb repository.
+- Fix permissions on /var/lib/sessions/.
+
 ### 2021-09-28
 - Add imagick package for TOTP.
 
