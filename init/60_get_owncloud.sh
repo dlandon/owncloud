@@ -11,6 +11,9 @@ if [ ! -f "/config/www/owncloud/index.php" ]; then
 	tar -xjf /tmp/owncloud-$OWNCLOUD_VERS.tar.bz2 -C /config/www/owncloud  --strip-components=1
 	rm -r /tmp/owncloud-$OWNCLOUD_VERS.tar.bz2
 	apt-get -y purge --remove wget
+else
+	# Fix database permission.
+	chown abc:users /config/database/
 fi
 
 # Set file permissions.

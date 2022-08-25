@@ -2,7 +2,7 @@
 
 docker run -d --name="ownCloud" \
 -p 8443:443 \
--e TZ="America/New_York" \
+-e TZ="America/Chicago" \
 -e PUID="99" \
 -e PGID="100" \
 -e PHP_VERS="7.4" \

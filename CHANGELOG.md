@@ -1,5 +1,15 @@
 ## Change Log
 
+### 2022-08-25
+- Fix /config/database/ permission.
+
+### 2022-06-24
+- Update initial ownCloud install to 10.10.0.
+
+### 2022-03-19
+- Update to Focal 1.2.0.
+- Update initial ownCloud install to 10.9.0.
+
 ### 2021-10-01
 - Change mariadb repository.
 - Fix permissions on /var/lib/sessions/.
