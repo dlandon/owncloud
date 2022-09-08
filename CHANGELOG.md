@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2022-09-08
+- Fix download of latest version of ownCloud for first install.
+
 ### 2022-08-25
 - Fix /config/database/ permission.
 
