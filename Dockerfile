@@ -13,7 +13,7 @@ ENV	DATADIR="$MYSQL_DIR/database" \
 	PHP_VERS_2="7.2" \
 	PHP_VERS_3="7.3" \
 	PHP_VERS="7.4" \
-	MARIADB_VERS="10.3"
+	MARIADB_VERS="10.4"
 
 FROM builder as build1
 COPY services/ /etc/service/
@@ -22,9 +22,9 @@ COPY init/ /etc/my_init.d/
 COPY upgrade_db /root/
 
 FROM build1 as build2
-RUN	apt-get install software-properties-common dirmngr apt-transport-https &&\
-	apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc' && \
-	add-apt-repository 'deb [arch=amd64,arm64,ppc64el,s390x] https://mirrors.gigenet.com/mariadb/repo/10.3/ubuntu focal main' && \
+RUN	apt-get install apt-transport-https curl && \
+	curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc' && \
+	sh -c "echo 'deb https://mirrors.gigenet.com/mariadb/repo/$MARIADB_VERS/ubuntu focal main' >>/etc/apt/sources.list" && \
 	add-apt-repository ppa:ondrej/php && \
 	apt-get update && \
 	apt-get -y upgrade -o Dpkg::Options::="--force-confold"
@@ -56,7 +56,7 @@ RUN	cd / && \
 	apt-get -y clean && \
 	update-rc.d -f mysql remove && \
 	update-rc.d -f mysql-common remove && \
-	rm -rf /tmp/* /var/tmp/* /var/lib/mysql && \
+	rm -rf /tmp/* /var/tmp/* && \
 	mkdir -p /var/lib/mysql && \
 	chmod -c +x /etc/service/*/run /etc/my_init.d/*.sh /root/upgrade_db && \
 	mkdir -p /var/run/redis && \

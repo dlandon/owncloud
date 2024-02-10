@@ -1,4 +1,7 @@
 ## Change Log
+###20223-12-21
+- Update Mariadb to 10.4.
+
 ### 2023-03-04
 - Refresh docker container.
 
