@@ -1,4 +1,4 @@
-FROM phusion/baseimage:focal-1.2.0 as builder
+FROM phusion/baseimage:focal-1.2.0
 
 LABEL maintainer="dlandon"
 
@@ -15,13 +15,11 @@ ENV	DATADIR="$MYSQL_DIR/database" \
 	PHP_VERS="7.4" \
 	MARIADB_VERS="10.4"
 
-FROM builder as build1
 COPY services/ /etc/service/
 COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
 COPY upgrade_db /root/
 
-FROM build1 as build2
 RUN	apt-get install apt-transport-https curl && \
 	curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc' && \
 	sh -c "echo 'deb https://mirrors.gigenet.com/mariadb/repo/$MARIADB_VERS/ubuntu focal main' >>/etc/apt/sources.list" && \
@@ -29,7 +27,6 @@ RUN	apt-get install apt-transport-https curl && \
 	apt-get update && \
 	apt-get -y upgrade -o Dpkg::Options::="--force-confold"
 
-FROM build2 as build3
 RUN	useradd -u 911 -U -d /config -s /bin/false abc && \
 	usermod -G users abc && \
 	apt-get -y install nginx mariadb-server mysqltuner libmysqlclient21 libpcre3-dev && \
@@ -50,7 +47,6 @@ RUN	useradd -u 911 -U -d /config -s /bin/false abc && \
 	apt-get -y install php-imagick pkg-config php-smbclient re2c ssl-cert sudo openssl nano && \
 	apt-get -y install redis
 
-FROM build3 as build4
 RUN	cd / && \
 	apt-get -y autoremove && \
 	apt-get -y clean && \
@@ -66,11 +62,8 @@ RUN	cd / && \
 	phpenmod -v $PHP_VERS -s ALL redis && \
 	echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /defaults/nginx-fpm.conf
 
-FROM build4 as build5
 EXPOSE 443
 
-FROM build5 as build6
 VOLUME /config /data
 
-FROM build6
 CMD ["/sbin/my_init"]
