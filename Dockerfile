@@ -24,8 +24,7 @@ RUN	apt-get install apt-transport-https curl && \
 	curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc' && \
 	sh -c "echo 'deb https://mirrors.gigenet.com/mariadb/repo/$MARIADB_VERS/ubuntu focal main' >>/etc/apt/sources.list" && \
 	add-apt-repository ppa:ondrej/php && \
-	apt-get update && \
-	apt-get -y upgrade -o Dpkg::Options::="--force-confold"
+	apt-get update
 
 RUN	useradd -u 911 -U -d /config -s /bin/false abc && \
 	usermod -G users abc && \
@@ -48,8 +47,6 @@ RUN	useradd -u 911 -U -d /config -s /bin/false abc && \
 	apt-get -y install redis
 
 RUN	cd / && \
-	apt-get -y autoremove && \
-	apt-get -y clean && \
 	update-rc.d -f mysql remove && \
 	update-rc.d -f mysql-common remove && \
 	rm -rf /tmp/* /var/tmp/* && \
@@ -60,7 +57,9 @@ RUN	cd / && \
 	sed -i -e 's/# unixsocket/unixsocket/g' /etc/redis/redis.conf && \
 	echo "extension=redis.so" > /etc/php/$PHP_VERS/mods-available/redis.ini && \
 	phpenmod -v $PHP_VERS -s ALL redis && \
-	echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /defaults/nginx-fpm.conf
+	echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /defaults/nginx-fpm.conf && \
+	/etc/my_init.d/20_apt_update.sh &&\
+	/etc/my_init.d/40_set_config.sh
 
 EXPOSE 443
 
