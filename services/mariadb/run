@@ -1,3 +1,16 @@
 #!/bin/bash
 
-/sbin/setuser abc /usr/bin/mysqld_safe --skip-syslog --binlog-format=MIXED
+# Function to handle clean shutdown
+shutdown_mariadb() {
+	echo "Shutting down MariaDB cleanly..."
+	mysqladmin -u root shutdown
+}
+
+# Trap SIGTERM and call shutdown function
+trap 'shutdown_mariadb' SIGTERM
+
+# Start MariaDB in the background
+/usr/bin/mariadbd-safe --user=abc --skip-syslog --binlog-format=MIXED &
+
+# Wait for the MariaDB process to finish (keeps the container running)
+wait $!

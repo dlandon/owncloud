@@ -7,20 +7,21 @@ ENV DEBIAN_FRONTEND="noninteractive" \
 	HOME="/root" \
 	TERM="xterm"
 
-ENV	MYSQL_DIR="/config"
-ENV	DATADIR="$MYSQL_DIR/database" \
+ENV	CONFIG="/config"
+ENV	DATADIR="$CONFIG/database" \
 	OWNCLOUD_VERS="complete-latest" \
 	PHP_VERS_2="7.2" \
 	PHP_VERS_3="7.3" \
 	PHP_VERS="7.4" \
-	MARIADB_VERS="10.4"
+	MARIADB_VERS="10.5"
 
 COPY services/ /etc/service/
 COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
 COPY upgrade_db /root/
 
-RUN	apt-get install apt-transport-https curl && \
+RUN echo -e "Package: php8.4*\nPin: release *\nPin-Priority: -1" > /etc/apt/preferences.d/no-php8.4 && \
+	apt-get install apt-transport-https curl && \
 	curl -o /etc/apt/trusted.gpg.d/mariadb_release_signing_key.asc 'https://mariadb.org/mariadb_release_signing_key.asc' && \
 	sh -c "echo 'deb https://mirrors.gigenet.com/mariadb/repo/$MARIADB_VERS/ubuntu focal main' >>/etc/apt/sources.list" && \
 	add-apt-repository ppa:ondrej/php && \
@@ -43,7 +44,10 @@ RUN	useradd -u 911 -U -d /config -s /bin/false abc && \
 	apt-get -y install php$PHP_VERS_3-mbstring php$PHP_VERS_3-xml php$PHP_VERS_3-xmlrpc php$PHP_VERS_3-zip php$PHP_VERS_3-imagick && \
 	apt-get -y install mcrypt exim4 exim4-base exim4-config exim4-daemon-light jq libaio1 libapr1 && \
 	apt-get -y install libaprutil1 libaprutil1-dbd-mysql libaprutil1-ldap libdbd-mysql-perl libdbi-perl libfreetype6 && \
-	apt-get -y install php-imagick pkg-config php-smbclient re2c ssl-cert sudo openssl nano && \
+	apt-get -y install php$PHP_VERS-imagick php$PHP_VERS-smbclient && \
+	apt-get -y install php$PHP_VERS_2-imagick php$PHP_VERS_2-smbclient && \
+	apt-get -y install php$PHP_VERS_3-imagick php$PHP_VERS_3-smbclient && \
+	apt-get -y install pkg-config re2c ssl-cert sudo openssl nano && \
 	apt-get -y install redis
 
 RUN	cd / && \

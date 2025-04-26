@@ -1,17 +1,41 @@
 #!/bin/bash
 
-# Wait for mysql to start
-sleep 300
+# Clean up redo logs if database version doesn't match installed mariadb version
+UPGRADE_FILE="$DATADIR/mysql_upgrade_info"
+
+if [ -f "$UPGRADE_FILE" ]; then
+	DB_VERS="$(cut -d'-' -f1 < "$UPGRADE_FILE" | cut -d'.' -f1,2)"
+else
+	DB_VERS="unknown"
+fi
+
+if [ "$DB_VERS" != "$MARIADB_VERS" ]; then
+	logger "database version mismatch ($DB_VERS != $MARIADB_VERS) - purging redo logs so update succeeds" -tmariadb
+	rm -f "$DATADIR/ib_logfile"*
+else
+	logger "database version $DB_VERS matches expected $MARIADB_VERS - no redo logs need to be purged" -tmariadb
+fi
+
+# Wait for MariaDB to become ready
+RETRIES=60
+until mysqladmin ping -u root --password="$DB_PASS" --silent; do
+	((RETRIES--))
+	if [ "$RETRIES" -le 0 ]; then
+		logger "MariaDB did not start in time." -tmariadb
+		exit 1
+	fi
+	sleep 5
+done
 
 # Upgrade databases
 logger "Upgrading databases..." -tmariadb
-/usr/bin/mysql_upgrade --password=$DB_PASS &> /tmp/result
+/usr/bin/mariadb-upgrade --user=root --password="$DB_PASS" &> /tmp/result
 
-# Remove the script if successfully upgraded the databases
-if [[ `grep "Upgrade failed" /tmp/result` != "" ]]; then
+# Handle result
+if grep -q "Upgrade failed" /tmp/result; then
 	logger "Error: Databases failed to upgrade - check 'DB_PASS' password." -tmariadb
 else
-	logger "`cat /tmp/result`" -tmariadb
+	logger "$(cat /tmp/result)" -tmariadb
 	rm -f /root/upgrade_db
 fi
 

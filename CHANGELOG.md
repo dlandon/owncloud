@@ -1,5 +1,10 @@
 ## Change Log
 
+### 2025-04-05
+- Update Mariadb to 10.5.
+- Add code to shutdown mariadb cleanly.
+- Block php 8.4 from being installed; it is not needed for ownCloud.
+
 ### 2024-11-23
 - Update packages after they are installed.
 

@@ -6,16 +6,11 @@
 # make folders if required
 mkdir -p config/{nginx/site-confs,www,log/mysql,log/nginx,keys} /var/run/{php,mysqld}
 
-# configure mariadb
-sed -i 's/key_buffer\b/key_buffer_size/g' /etc/mysql/my.cnf
-sed -ri 's/^(bind-address|skip-networking)/;\1/' /etc/mysql/my.cnf
-sed -i s#/var/log/mysql#/config/log/mysql#g /etc/mysql/my.cnf
-sed -i -e 's/\(user.*=\).*/\1 abc/g' /etc/mysql/my.cnf
-sed -i -e "s#\(datadir.*=\).*#\1 $DATADIR#g" /etc/mysql/my.cnf
-sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mysqld_safe
+# configure mariadb-safe
+sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mariadbd-safe 2>/dev/null
 
 # setup custom cnf file
-[[ ! -f /config/custom.cnf ]] && cp /defaults/my.cnf /config/custom.cnf
+cp /defaults/my.cnf /config/custom.cnf
 [[ ! -L /etc/mysql/conf.d/custom.cnf && -f /etc/mysql/conf.d/custom.cnf ]] && rm /etc/mysql/conf.d/custom.cnf
 [[ ! -L /etc/mysql/conf.d/custom.cnf ]] && ln -s /config/custom.cnf /etc/mysql/conf.d/custom.cnf
 
@@ -68,7 +63,7 @@ if [ `stat -c '%a' /data` != '770' ]; then
 	chmod -R 770 /data
 fi
 
-chown -R abc:abc /var/run/php /var/run/redis /var/run/mysqld
+chown -R abc:abc "$CONFIG" /var/run/php /var/run/redis /var/run/mysqld
 chmod -R 755 /var/run/mysqld
 
 chmod 770 /etc/mysql/conf.d/custom.cnf

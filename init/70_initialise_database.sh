@@ -5,11 +5,11 @@
 
 # set start function that creates user and password, used later
 start_mysql(){
-	mysqld --init-file="$tempSqlFile" &
+	sudo mysqld --user=root --init-file="$tempSqlFile" &
 	pid="$!"
 	RET=1
 	while [[ RET -ne 0 ]]; do
-		mysql -uroot -e "status" > /dev/null 2>&1
+		sudo mysql --user=root -e "status" > /dev/null 2>&1
 		RET=$?
 		sleep 1
 	done
@@ -53,7 +53,7 @@ if [ ! -d "$DATADIR/mysql" ]; then
 	CREATE DATABASE IF NOT EXISTS owncloud;
 	GRANT ALL PRIVILEGES ON owncloud.* TO 'owncloud'@'localhost' IDENTIFIED BY '${OWNCLOUD_PASS}' ;
 	EONEWSQL
-	echo "Setting Up Initial Databases"
+	echo "Setting Up Initial Databases..."
 
 	# set some permissions needed before we begin initialising
 	chown -R abc:abc /config/log/mysql /var/run/mysqld
@@ -66,9 +66,9 @@ if [ ! -d "$DATADIR/mysql" ]; then
 	start_mysql
 
 	# shut down after apply sql commands, waiting for pid to stop
-	mysqladmin -u root  shutdown
+	sudo mysqladmin --user=root shutdown
 	wait "$pid"
-	echo "Database Setup Completed"
+	echo "Database Setup Completed..."
 
 	# display a message about password if not set or too short
 	if [ "$TEST_LEN" -lt "4" ]; then
@@ -77,7 +77,7 @@ if [ ! -d "$DATADIR/mysql" ]; then
 	fi
 
 	# do some more owning to finish our first run sequence
-	chown -R abc:abc "$MYSQL_DIR" /config/log/mysql
+	chown -R abc:abc "$DATADIR" /config/log/mysql
 fi
 
 # clean up any old install files from /tmp
