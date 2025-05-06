@@ -5,7 +5,7 @@
 
 # Update repositories
 echo "Performing updates..."
-apt-get update 2>&1 | tee /tmp/test_update
+apt-get update --allow-releaseinfo-change 2>&1 | tee /tmp/test_update
 
 # Verify that the updates will work.
 if [ "`cat /tmp/test_update | grep 'Failed'`" = "" ]; then

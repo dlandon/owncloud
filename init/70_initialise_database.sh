@@ -75,10 +75,10 @@ if [ ! -d "$DATADIR/mysql" ]; then
 		less /tmp/no-pass.nfo
 		sleep 5s
 	fi
-
-	# do some more owning to finish our first run sequence
-	chown -R abc:abc "$DATADIR" /config/log/mysql
 fi
+
+# fix database ownership
+chown -R abc:abc "$DATADIR" /config/log/mysql
 
 # clean up any old install files from /tmp
 if [ -f "/tmp/no-pass.nfo" ]; then
