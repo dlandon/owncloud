@@ -1,5 +1,9 @@
 ## Change Log
 
+### 2025-05-07
+- Maintain local copies of mariadb to not depend on the mariadb repsoitory.
+- Changes to be sure mariadb 10.5 is never updated to a later version.
+
 ### 2025-04-25
 - Update Mariadb to 10.5.
 - Add code to shutdown mariadb cleanly.
