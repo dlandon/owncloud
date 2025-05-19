@@ -1,5 +1,9 @@
 ## Change Log
 
+### 2025-05-18
+- Fix issue in docker file with updating mariadb and refresh the docker container.
+- Can't rely on local mariadb packages when mariadb version is EOL.
+
 ### 2025-05-07
 - Maintain local copies of mariadb to not depend on the mariadb repsoitory.
 - Changes to be sure mariadb 10.5 is never updated to a later version.

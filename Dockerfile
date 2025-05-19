@@ -19,20 +19,15 @@ COPY services/ /etc/service/
 COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
 COPY upgrade_db /root/
-COPY mariadb-debs/$MARIADB_VERS/ /tmp/mariadb-debs/
 
 RUN apt-get update --allow-releaseinfo-change && \
 	apt-get install -y software-properties-common curl gnupg libaio1 libpcre3-dev libgd3 && \
 	curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=${MARIADB_VERS} && \
-	/* Pin to only allow ${MARIADB_VERS}.x updates */ \
-	echo -e "Package: *\nPin: release o=MariaDB\nPin-Priority: 1001\n" > /etc/apt/preferences.d/mariadb && \
-	echo -e "Package: *\nPin: version ${MARIADB_VERS}*\nPin-Priority: 1002\n" >> /etc/apt/preferences.d/mariadb && \
 	apt-get update --allow-releaseinfo-change && \
 	apt-mark hold php8.4 php8.4-* || true && \
 	add-apt-repository -y ppa:ondrej/php && \
-	apt-get update --allow-releaseinfo-change && \
-	apt-get install -y libgd3 && \
-	dpkg -i /tmp/mariadb-debs/*.deb || apt-get -f install -y
+	apt-get install -y mariadb-server mariadb-client && \
+	apt-mark hold mariadb-server mariadb-client mariadb-server-${MARIADB_VERS} mariadb-client-${MARIADB_VERS}
 
 RUN useradd -u 911 -U -d /config -s /bin/false abc && \
 	usermod -G users abc && \
