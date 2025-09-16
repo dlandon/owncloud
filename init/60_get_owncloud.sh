@@ -5,12 +5,10 @@
 
 # is ownCloud already installed?
 if [ ! -f "/config/www/owncloud/index.php" ]; then
-	apt-get -y install wget
-	wget https://download.owncloud.com/server/stable/owncloud-${OWNCLOUD_VERS}.tar.bz2 -P /tmp/
+	curl -L "https://download.owncloud.com/server/stable/owncloud-${OWNCLOUD_VERS}.tar.bz2" -o /tmp/owncloud-${OWNCLOUD_VERS}.tar.bz2
 	mkdir -p /config/www/owncloud
-	tar -xjf /tmp/owncloud-${OWNCLOUD_VERS}.tar.bz2 -C /config/www/owncloud  --strip-components=1
+	tar -xjf /tmp/owncloud-${OWNCLOUD_VERS}.tar.bz2 -C /config/www/owncloud --strip-components=1
 	rm -r /tmp/owncloud-${OWNCLOUD_VERS}.tar.bz2
-	apt-get -y purge --remove wget
 else
 	# Fix database permission.
 	chown abc:users /config/database/
