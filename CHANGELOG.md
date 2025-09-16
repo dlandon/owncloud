@@ -1,5 +1,11 @@
 ## Change Log
 
+### 2025-09-16
+- Update to Jammy 1.0.4.
+- Update Mariadb to 10.6.
+- Remove php 7.2 and 7.3 selections.
+- Php version 7.4 only.
+
 ### 2025-05-18
 - Fix issue in docker file with updating mariadb and refresh the docker container.
 - Can't rely on local mariadb packages when mariadb version is EOL.
