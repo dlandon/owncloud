@@ -19,34 +19,22 @@ cp /defaults/my.cnf /config/custom.cnf
 [[ ! -f /config/nginx/nginx-fpm.conf ]] && cp /defaults/nginx-fpm.conf /config/nginx/nginx-fpm.conf
 [[ ! -f /config/nginx/site-confs/default ]] && cp /defaults/default /config/nginx/site-confs/default
 
-# Set the PHP version from the environment variable
-sed -i s#php7.0#php${PHP_VERS}#g /config/nginx/site-confs/default
-sed -i s#php7.0#php${PHP_VERS}#g /config/nginx/nginx-fpm.conf
-
-sed -i s#php7.1#php${PHP_VERS}#g /config/nginx/site-confs/default
-sed -i s#php7.1#php${PHP_VERS}#g /config/nginx/nginx-fpm.conf
-
-sed -i s#php7.2#php${PHP_VERS}#g /config/nginx/site-confs/default
-sed -i s#php7.2#php${PHP_VERS}#g /config/nginx/nginx-fpm.conf
-
-sed -i s#php7.3#php${PHP_VERS}#g /config/nginx/site-confs/default
-sed -i s#php7.3#php${PHP_VERS}#g /config/nginx/nginx-fpm.conf
-
-sed -i s#php7.4#php${PHP_VERS}#g /config/nginx/site-confs/default
-sed -i s#php7.4#php${PHP_VERS}#g /config/nginx/nginx-fpm.conf
+# Replace PHP version in nginx configs
+sed -i "s#php7.[0-9]#php${OC_PHP_VERS}#g" /config/nginx/site-confs/default
+sed -i "s#php7.[0-9]#php${OC_PHP_VERS}#g" /config/nginx/nginx-fpm.conf
 
 # Switch php cli
-update-alternatives --set php /usr/bin/php${PHP_VERS}
+update-alternatives --set php /usr/bin/php${OC_PHP_VERS}
 
 # Install the proper version of php-redis
 if [ "`php -m | grep redis`" = "" ]; then
-	apt-get -y install php-pear php${PHP_VERS}-dev
+	apt-get -y install php-pear php${OC_PHP_VERS}-dev
 	pecl uninstall redis
-	pecl install redis
-	apt-get -y remove php-pear php${PHP_VERS}-dev
+	pecl channel-update pecl.php.net && pecl install redis
+	apt-get -y remove php-pear php${OC_PHP_VERS}-dev
 
-	echo "extension=redis.so" > /etc/php/${PHP_VERS}/mods-available/redis.ini
-	phpenmod -v ${PHP_VERS} -s ALL redis
+	echo "extension=redis.so" > /etc/php/${OC_PHP_VERS}/mods-available/redis.ini
+	phpenmod -v ${OC_PHP_VERS} -s ALL redis
 
 	apt-get -y autoremove
 fi
