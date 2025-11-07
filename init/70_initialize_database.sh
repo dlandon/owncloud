@@ -66,7 +66,7 @@ if [ ! -d "$DATADIR/mysql" ]; then
 	start_mysql
 
 	# shut down after apply sql commands, waiting for pid to stop
-	sudo mysqladmin --user=root shutdown
+	sudo mysqladmin -u root shutdown
 	wait "$pid"
 	echo "Database Setup Completed..."
 

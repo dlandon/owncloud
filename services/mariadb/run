@@ -2,8 +2,12 @@
 
 # Function to handle clean shutdown
 shutdown_mariadb() {
-	echo "Shutting down MariaDB cleanly..."
-	mysqladmin -u root shutdown
+	if pgrep -x mariadbd >/dev/null 2>&1; then
+		echo "Shutting down MariaDB cleanly..."
+		mysqladmin --socket=/run/mysqld/mysqld.sock -u root shutdown >/dev/null 2>&1
+	else
+		echo "MariaDB is not running. Skipping shutdown."
+	fi
 }
 
 # Trap SIGTERM and call shutdown function
