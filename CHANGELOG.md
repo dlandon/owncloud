@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2026-02-22
+- Refresh docker container.
+
 ### 2025-11-07
 - Fix shutdown of mariadb to assure a clean shutdown
 - Refresh docker container.
