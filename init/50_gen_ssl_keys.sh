@@ -21,16 +21,40 @@ rc=0
 need_gen=0
 reason=""
 
+log_msg()
+{
+	local msg="$1"
+	echo "[ssl] ${msg}"
+}
+
 is_our_cert()
 {
 	local subj=""
+	local iss=""
+	local san=""
+	local rc=1
 
+	# Get subject.
 	subj="$(openssl x509 -in "${CRT}" -noout -subject 2>/dev/null)"
-	if echo "${subj}" | grep -q "O=${AUTOGEN_O}" && echo "${subj}" | grep -q "OU=${AUTOGEN_OU}"; then
-		return 0
+
+	# Subject marker must match.
+	if echo "${subj}" | grep -q "O=${AUTOGEN_O}" && \
+	   echo "${subj}" | grep -q "OU=${AUTOGEN_OU}"; then
+
+		# Must be self-signed (issuer == subject).
+		iss="$(openssl x509 -in "${CRT}" -noout -issuer 2>/dev/null)"
+		if [[ -n "${iss}" && "${iss}" == "${subj/subject=/issuer=}" ]]; then
+
+			# Must contain our baseline SAN entries.
+			san="$(openssl x509 -in "${CRT}" -noout -ext subjectAltName 2>/dev/null)"
+			if echo "${san}" | grep -q "DNS:localhost" && \
+			   echo "${san}" | grep -q "IP Address:127.0.0.1"; then
+				rc=0
+			fi
+		fi
 	fi
 
-	return 1
+	return ${rc}
 }
 
 cert_expires_within_days()
@@ -120,7 +144,7 @@ if [[ -s "${KEY}" && -s "${CRT}" ]]; then
 		# User-provided cert ? do not modify, but warn if expired.
 		cert_expires_within_days 0
 		if [[ $? -ne 0 ]]; then
-			echo "WARNING: TLS certificate in ${KEY_DIR} is expired. Please replace it."
+			log_msg "WARNING: TLS certificate in ${KEY_DIR} is expired. Please replace it."
 		fi
 	fi
 else
@@ -129,20 +153,20 @@ else
 fi
 
 if [[ ${need_gen} -eq 1 ]]; then
-	echo "Generating self-signed keys in ${KEY_DIR} ${reason}, you can replace these with your own keys if required"
+	log_msg "Generating self-signed keys in ${KEY_DIR} ${reason}, you can replace these with your own keys if required"
 
 	# Remove any partial outputs first.
 	rm -f "${CRT}" "${KEY}" >/dev/null 2>&1
 
 	generate_cert
 	if [[ $? -ne 0 ]]; then
-		echo "ERROR: Failed to generate self-signed certificate in ${KEY_DIR}"
+		log_msg "ERROR: Failed to generate self-signed certificate in ${KEY_DIR}"
 		rc=1
 	else
-		echo "Self-signed certificate generated (valid ${DAYS_VALID} days, SAN=localhost/127.0.0.1)"
+		log_msg "Self-signed certificate generated (valid ${DAYS_VALID} days, SAN=localhost/127.0.0.1)"
 	fi
 else
-	echo "Using existing keys in \"${KEY_DIR}\""
+	log_msg "Using existing keys in \"${KEY_DIR}\""
 fi
 
 chown abc:abc "${CRT}" >/dev/null 2>&1
