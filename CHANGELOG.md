@@ -1,7 +1,14 @@
 ## Change Log
 
+### 2026-04-12
+- Refresh docker container.
+
 ### 2026-02-22
 - Refresh docker container.
+- Refactor certificate handling to deal better with user supplied certificate.
+- Shorten default self signed certificate renewal to 825 days.
+- Give log warning when default self signed certificate is within 30 days of expiring.
+- Renew the default self signed certificate so it won't expire on the next container restart.
 
 ### 2025-11-07
 - Fix shutdown of mariadb to assure a clean shutdown
