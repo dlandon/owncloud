@@ -5,6 +5,7 @@ docker run -d --name="ownCloud" \
 -e TZ="America/Chicago" \
 -e PUID="99" \
 -e PGID="100" \
+-e AUTO_OS_UPDATES="1" \
 -e DB_PASS="owncloud" \
 -v "/mnt/cache/appdata/ownCloud":"/config":rw \
 -v "/mnt/cache/appdata/ownCloud/data":"/data":rw \

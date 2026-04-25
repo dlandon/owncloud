@@ -1,5 +1,9 @@
 ## Change Log
 
+###  2026-04-25
+- Refresh docker container.
+- Add AUTO_OS_UPDATES environment variable to enable/disable OS and package updates.
+
 ### 2026-04-12
 - Refresh docker container.
 
