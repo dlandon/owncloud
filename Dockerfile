@@ -20,9 +20,20 @@ COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
 COPY upgrade_db /root/
 
-# Install base packages, PHP, MariaDB (Jammy default), and hold MariaDB at MARIADB_VERS
+# Install base packages, PHP, MariaDB, and Tailscale.
+#
+# Tailscale is pre-installed so the Unraid Docker Tailscale hook can
+# use the packaged binaries directly instead of downloading Tailscale
+# whenever the container is recreated. The Unraid hook still manages
+# Tailscale startup, state, authentication, and Serve configuration.
 RUN echo -e "Package: php8.4*\nPin: release *\nPin-Priority: -1" > /etc/apt/preferences.d/no-php8.4 && \
 	apt-get update --allow-releaseinfo-change && \
+	apt-get install -y --no-install-recommends curl ca-certificates && \
+	mkdir -p --mode=0755 /usr/share/keyrings && \
+	curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/jammy.noarmor.gpg \
+		-o /usr/share/keyrings/tailscale-archive-keyring.gpg && \
+	curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/jammy.tailscale-keyring.list \
+		-o /etc/apt/sources.list.d/tailscale.list && \
 	apt-get -y upgrade -o Dpkg::Options::="--force-confold" && \
 	add-apt-repository -y ppa:ondrej/php && \
 	apt-get update --allow-releaseinfo-change && \
@@ -37,9 +48,10 @@ RUN echo -e "Package: php8.4*\nPin: release *\nPin-Priority: -1" > /etc/apt/pref
 		libaprutil1 libaprutil1-dbd-mysql libaprutil1-ldap libdbd-mysql-perl libdbi-perl libfreetype6 \
 		pkg-config re2c ssl-cert sudo openssl nano redis php${OC_PHP_VERS}-ctype php${OC_PHP_VERS}-iconv \
 		php${OC_PHP_VERS}-json php${OC_PHP_VERS}-phar php${OC_PHP_VERS}-posix php${OC_PHP_VERS}-fileinfo \
-		php${OC_PHP_VERS}-exif exiftool && \
-	apt-mark hold php8.4 php8.4-* || true \
-		mariadb-server mariadb-client mariadb-server-${MARIADB_VERS} mariadb-client-${MARIADB_VERS}
+		php${OC_PHP_VERS}-exif exiftool tailscale && \
+	ln -sf /usr/sbin/tailscaled /usr/bin/tailscaled && \
+	(apt-mark hold php8.4 php8.4-* || true) && \
+	apt-mark hold mariadb-server mariadb-client mariadb-server-${MARIADB_VERS} mariadb-client-${MARIADB_VERS}
 
 RUN useradd -u 911 -U -d /config -s /bin/false abc && \
 	usermod -G users abc && \
