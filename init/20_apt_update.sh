@@ -11,6 +11,7 @@ if [ "$AUTO_OS_UPDATES" = "1" ]; then
 	#
 	# Update repositories
 	#
+	echo "Performing updates..."
 	apt-get update --allow-releaseinfo-change 2>&1 | tee /tmp/test_update
 
 	#
