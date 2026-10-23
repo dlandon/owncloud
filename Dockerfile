@@ -69,6 +69,14 @@ RUN useradd -u 911 -U -d /config -s /bin/false abc && \
 	echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /defaults/nginx-fpm.conf
 
 RUN	apt-get update --allow-releaseinfo-change && \
+	apt-get install -y --only-upgrade "php${OC_PHP_VERS}*" && \
+	if [ "${OC_PHP_VERS}" = "7.4" ]; then \
+		php_fpm_version="$(dpkg-query -W -f='${Version}' php7.4-fpm)" && \
+		dpkg --compare-versions "$php_fpm_version" ge "1:7.4.33-31" || { \
+			echo "ERROR: php7.4-fpm ${php_fpm_version} is older than the required security fix 1:7.4.33-31." >&2; \
+			exit 1; \
+		}; \
+	fi && \
 	apt-get -y upgrade -o Dpkg::Options::="--force-confold" && \
 	apt-get purge -y packagekit && \
 	apt-get -y autoremove && \

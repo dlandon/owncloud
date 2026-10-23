@@ -1,5 +1,8 @@
 ## Change Log
 
+### 2026-10-23
+- Updated PHP 7.4 packages to include fixes for CVE-2026-109618 and CVE-2026-109619 (PHP2Shell). Added a build-time version check to prevent creating an image with an unpatched `php7.4-fpm` package.
+
 ### 2026-09-11
 - Added optional Tailscale support for secure remote access to ownCloud.
 - Added support for assigning the container a unique Tailscale hostname.

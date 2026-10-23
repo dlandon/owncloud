@@ -170,7 +170,7 @@ else
 fi
 
 chown abc:abc "${CRT}" >/dev/null 2>&1
-chmod 600 "${CRT}" >/dev/null 2>&1
+chmod 644 "${CRT}" >/dev/null 2>&1
 
 chown abc:abc "${KEY}" >/dev/null 2>&1
 chmod 600 "${KEY}" >/dev/null 2>&1
