@@ -2,15 +2,28 @@
 #
 # 70_initialise_database.sh
 #
+set -Eeuo pipefail
+
+DB_VERSION="$(cat /run/owncloud/mariadb-version)"
+DB_BINDIR="$(cat /run/owncloud/mariadb-bin-path)"
+export PATH="${DB_BINDIR}:${PATH}"
+if [[ "${DB_VERSION}" == "10.11" ]]; then
+	export LD_LIBRARY_PATH="/opt/mariadb-10.11/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+fi
+DATADIR="${DATADIR:-/config/database}"
 
 # set start function that creates user and password, used later
 start_mysql(){
-	sudo mysqld --user=root --init-file="$tempSqlFile" &
+	if command -v mariadbd >/dev/null 2>&1; then
+		DB_SERVER="$(command -v mariadbd)"
+	else
+		DB_SERVER="$(command -v mysqld)"
+	fi
+	sudo "$DB_SERVER" --defaults-file=/etc/mysql/my.cnf --user=root --init-file="$tempSqlFile" \
+		--datadir="$DATADIR" --socket=/run/mysqld/mysqld.sock --pid-file=/run/mysqld/mysqld.pid &
 	pid="$!"
-	RET=1
-	while [[ RET -ne 0 ]]; do
-		sudo mysql --user=root -e "status" > /dev/null 2>&1
-		RET=$?
+	until sudo mariadb --socket=/run/mysqld/mysqld.sock --user=root -e "status" > /dev/null 2>&1 || \
+		sudo mysql --socket=/run/mysqld/mysqld.sock --user=root -e "status" > /dev/null 2>&1; do
 		sleep 1
 	done
 }
@@ -60,13 +73,18 @@ if [ ! -d "$DATADIR/mysql" ]; then
 	chmod -R 770 /config/log/mysql
 
 	# initialise database structure
-	mysql_install_db --datadir="$DATADIR"
+	if command -v mariadb-install-db >/dev/null 2>&1; then
+		mariadb-install-db --user=abc --datadir="$DATADIR" --basedir="$( [[ "$DB_VERSION" == "10.11" ]] && echo /opt/mariadb-10.11 || echo /usr )"
+	else
+		mysql_install_db --user=abc --datadir="$DATADIR"
+	fi
 
 	# start mysql and apply our sql commands we set above
 	start_mysql
 
 	# shut down after apply sql commands, waiting for pid to stop
-	sudo mysqladmin -u root shutdown
+	sudo mariadb-admin --socket=/run/mysqld/mysqld.sock -u root shutdown || \
+		sudo mysqladmin --socket=/run/mysqld/mysqld.sock -u root shutdown
 	wait "$pid"
 	echo "Database Setup Completed..."
 

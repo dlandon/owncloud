@@ -1,5 +1,12 @@
 ## Change Log
 
+### 2026-10-24
+- Install PHP 7.4 and PHP 8.3 in the image build; select PHP automatically from the persistent ownCloud release.
+- Pin clean installs to ownCloud 11.0.1 and MariaDB 10.11.19; keep existing ownCloud 10.x and MariaDB 10.6 data on their legacy runtimes.
+- Stop startup before database initialization when the ownCloud release is older than 10.9 or cannot be identified.
+- Require explicit environment settings before starting an existing MariaDB 10.6 data directory with MariaDB 10.11.
+- Increase nginx FastCGI timeout to one hour for long ownCloud web-updater operations.
+
 ### 2026-10-23
 - Updated PHP 7.4 packages to include fixes for CVE-2026-109618 and CVE-2026-109619 (PHP2Shell). Added a build-time version check to prevent creating an image with an unpatched `php7.4-fpm` package.
 
@@ -8,7 +15,7 @@
 - Added support for assigning the container a unique Tailscale hostname.
 - Added persistent storage for the Tailscale configuration and device identity.
 - Added automatic Tailscale startup and shutdown handling.
-- Disabling Tailscale cleanly restores the container’s normal networking behavior.
+- Disabling Tailscale cleanly restores the containerï¿½s normal networking behavior.
 - Existing installations remain compatible and do not require Tailscale.
 
 ###  2026-09-08

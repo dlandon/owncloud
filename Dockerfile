@@ -1,4 +1,4 @@
-FROM phusion/baseimage:jammy-1.0.4
+FROM phusion/baseimage:jammy-1.0.5
 
 LABEL maintainer="dlandon"
 
@@ -9,18 +9,20 @@ ENV DEBIAN_FRONTEND="noninteractive" \
 
 ENV CONFIG="/config"
 ENV DATADIR="$CONFIG/database" \
-	OWNCLOUD_VERS="complete-latest" \
 	TZ="Etc/UTC" \
-	AUTO_OS_UPDATES="1" \
-	OC_PHP_VERS="7.4" \
-	MARIADB_VERS="10.6"
+	AUTO_OS_UPDATES="1"
+
+ARG MARIADB_LEGACY_VERSION="10.6"
+ARG MARIADB_NEW_VERSION="10.11.19"
+ARG MARIADB_NEW_SHA256="7efb257927f31f4422f496246b32590d0b7617f3d9dd900e575de761b302d919"
+ARG MARIADB_NEW_DIR_VERSION="10.11"
 
 COPY services/ /etc/service/
 COPY defaults/ /defaults/
 COPY init/ /etc/my_init.d/
 COPY upgrade_db /root/
 
-# Install base packages, PHP, MariaDB, and Tailscale.
+# Install base packages, both supported PHP runtimes, MariaDB 10.6, and Tailscale.
 #
 # Tailscale is pre-installed so the Unraid Docker Tailscale hook can
 # use the packaged binaries directly instead of downloading Tailscale
@@ -28,7 +30,7 @@ COPY upgrade_db /root/
 # Tailscale startup, state, authentication, and Serve configuration.
 RUN echo -e "Package: php8.4*\nPin: release *\nPin-Priority: -1" > /etc/apt/preferences.d/no-php8.4 && \
 	apt-get update --allow-releaseinfo-change && \
-	apt-get install -y --no-install-recommends curl ca-certificates && \
+	apt-get install -y --no-install-recommends curl ca-certificates software-properties-common && \
 	mkdir -p --mode=0755 /usr/share/keyrings && \
 	curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/jammy.noarmor.gpg \
 		-o /usr/share/keyrings/tailscale-archive-keyring.gpg && \
@@ -37,21 +39,59 @@ RUN echo -e "Package: php8.4*\nPin: release *\nPin-Priority: -1" > /etc/apt/pref
 	apt-get -y upgrade -o Dpkg::Options::="--force-confold" && \
 	add-apt-repository -y ppa:ondrej/php && \
 	apt-get update --allow-releaseinfo-change && \
-	apt-get install -y --no-install-recommends software-properties-common curl gnupg libaio1 libpcre3-dev libgd3 \
+	apt-get install -y --no-install-recommends software-properties-common curl gnupg libaio1 libpcre3-dev libgd3 liburing2 \
 		mariadb-server mariadb-client \
-		nginx mysqltuner libmysqlclient21 php${OC_PHP_VERS} apache2- apache2-bin- php${OC_PHP_VERS}-fpm \
-		php${OC_PHP_VERS}-cli php${OC_PHP_VERS}-common php${OC_PHP_VERS}-apcu php${OC_PHP_VERS}-bz2 \
-		php${OC_PHP_VERS}-mysql php${OC_PHP_VERS}-curl php${OC_PHP_VERS}-gd php${OC_PHP_VERS}-gmp \
-		php${OC_PHP_VERS}-imap php${OC_PHP_VERS}-intl php${OC_PHP_VERS}-ldap php${OC_PHP_VERS}-mbstring \
-		php${OC_PHP_VERS}-xml php${OC_PHP_VERS}-xmlrpc php${OC_PHP_VERS}-zip php${OC_PHP_VERS}-imagick \
-		php${OC_PHP_VERS}-smbclient mcrypt exim4 exim4-base exim4-config exim4-daemon-light jq libapr1 \
+		nginx mysqltuner libmysqlclient21 apache2- apache2-bin- \
+		php7.4-fpm php7.4-cli php7.4-common php7.4-apcu php7.4-bz2 php7.4-mysql php7.4-curl \
+		php7.4-gd php7.4-gmp php7.4-imap php7.4-intl php7.4-ldap php7.4-mbstring php7.4-xml \
+		php7.4-xmlrpc php7.4-zip php7.4-imagick php7.4-smbclient php7.4-redis \
+		php8.3-fpm php8.3-cli php8.3-common php8.3-apcu php8.3-bz2 php8.3-mysql php8.3-curl \
+		php8.3-gd php8.3-gmp php8.3-imap php8.3-intl php8.3-ldap php8.3-mbstring php8.3-xml \
+		php8.3-xmlrpc php8.3-zip php8.3-imagick php8.3-smbclient php8.3-redis \
+		mcrypt exim4 exim4-base exim4-config exim4-daemon-light jq libapr1 \
 		libaprutil1 libaprutil1-dbd-mysql libaprutil1-ldap libdbd-mysql-perl libdbi-perl libfreetype6 \
-		pkg-config re2c ssl-cert sudo openssl nano redis php${OC_PHP_VERS}-ctype php${OC_PHP_VERS}-iconv \
-		php${OC_PHP_VERS}-json php${OC_PHP_VERS}-phar php${OC_PHP_VERS}-posix php${OC_PHP_VERS}-fileinfo \
-		php${OC_PHP_VERS}-exif exiftool tailscale && \
+		pkg-config re2c ssl-cert sudo openssl nano redis exiftool tailscale && \
 	ln -sf /usr/sbin/tailscaled /usr/bin/tailscaled && \
-	(apt-mark hold php8.4 php8.4-* || true) && \
-	apt-mark hold mariadb-server mariadb-client mariadb-server-${MARIADB_VERS} mariadb-client-${MARIADB_VERS}
+	apt-mark hold mariadb-server mariadb-client mariadb-server-${MARIADB_LEGACY_VERSION} \
+		mariadb-client-${MARIADB_LEGACY_VERSION} mariadb-server-core-${MARIADB_LEGACY_VERSION} \
+		mariadb-client-core-${MARIADB_LEGACY_VERSION}
+
+# Keep MariaDB 10.6 from Ubuntu for existing databases. Bundle MariaDB 10.11
+# separately so a clean install can start on 10.11 while an existing 10.6
+# datadir remains on its original server until the operator deliberately opts
+# into the database upgrade.
+RUN curl -fsSL "https://archive.mariadb.org/mariadb-${MARIADB_NEW_VERSION}/bintar-linux-systemd-x86_64/mariadb-${MARIADB_NEW_VERSION}-linux-systemd-x86_64.tar.gz" \
+		-o /tmp/mariadb-new.tar.gz && \
+	echo "${MARIADB_NEW_SHA256}  /tmp/mariadb-new.tar.gz" | sha256sum -c - && \
+	mkdir -p /opt/mariadb-${MARIADB_NEW_DIR_VERSION} && \
+	tar -xzf /tmp/mariadb-new.tar.gz --strip-components=1 -C /opt/mariadb-${MARIADB_NEW_DIR_VERSION} && \
+	if [ -x /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mariadbd ]; then \
+		ln -sf mariadbd /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mysqld; \
+	fi && \
+	if [ -x /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/scripts/mysql_install_db ]; then \
+		ln -sf ../scripts/mysql_install_db /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mysql_install_db; \
+		ln -sf ../scripts/mysql_install_db /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mariadb-install-db; \
+	fi && \
+	if [ -x /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mysqladmin ]; then \
+		ln -sf mysqladmin /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mariadb-admin; \
+	fi && \
+	upgrade_tool="$(find /opt/mariadb-${MARIADB_NEW_DIR_VERSION} -type f \( -name mariadb-upgrade -o -name mysql_upgrade \) -perm /111 -print -quit)" && \
+	if [ -z "${upgrade_tool}" ]; then \
+		echo "ERROR: MariaDB upgrade utility was not found in the bundled tarball." >&2; \
+		exit 1; \
+	fi && \
+	if [ ! -x /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mariadb-upgrade ]; then \
+		ln -s "${upgrade_tool}" /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mariadb-upgrade; \
+	fi && \
+	if [ ! -x /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mysql_upgrade ]; then \
+		ln -s "${upgrade_tool}" /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mysql_upgrade; \
+	fi && \
+	rm -rf /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/mysql-test /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/sql-bench \
+		/opt/mariadb-${MARIADB_NEW_DIR_VERSION}/share/doc /tmp/mariadb-new.tar.gz && \
+	LD_LIBRARY_PATH=/opt/mariadb-${MARIADB_NEW_DIR_VERSION}/lib:/opt/mariadb-${MARIADB_NEW_DIR_VERSION}/lib/mysql \
+		ldd /opt/mariadb-${MARIADB_NEW_DIR_VERSION}/bin/mariadbd > /tmp/mariadb-ldd && \
+	if grep -q "not found" /tmp/mariadb-ldd; then cat /tmp/mariadb-ldd; exit 1; fi && \
+	rm /tmp/mariadb-ldd
 
 RUN useradd -u 911 -U -d /config -s /bin/false abc && \
 	usermod -G users abc && \
@@ -64,25 +104,21 @@ RUN useradd -u 911 -U -d /config -s /bin/false abc && \
 	mkdir -p /var/run/redis && \
 	sed -i -e 's/port 6379/port 0/g' /etc/redis/redis.conf && \
 	sed -i -e 's/# unixsocket/unixsocket/g' /etc/redis/redis.conf && \
-	echo "extension=redis.so" > /etc/php/${OC_PHP_VERS}/mods-available/redis.ini && \
-	phpenmod -v ${OC_PHP_VERS} -s ALL redis && \
+	phpenmod -v 7.4 -s ALL redis && \
+	phpenmod -v 8.3 -s ALL redis && \
 	echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /defaults/nginx-fpm.conf
 
-RUN	apt-get update --allow-releaseinfo-change && \
-	apt-get install -y --only-upgrade "php${OC_PHP_VERS}*" && \
-	if [ "${OC_PHP_VERS}" = "7.4" ]; then \
-		php_fpm_version="$(dpkg-query -W -f='${Version}' php7.4-fpm)" && \
-		dpkg --compare-versions "$php_fpm_version" ge "1:7.4.33-31" || { \
-			echo "ERROR: php7.4-fpm ${php_fpm_version} is older than the required security fix 1:7.4.33-31." >&2; \
-			exit 1; \
-		}; \
+RUN apt-get update --allow-releaseinfo-change && \
+	apt-get install -y --only-upgrade "php7.4*" "php8.3*" && \
+	php_fpm_version="$(dpkg-query -W -f='${Version}' php7.4-fpm)" && \
+	if ! dpkg --compare-versions "$php_fpm_version" ge "1:7.4.33-31"; then \
+		echo "ERROR: php7.4-fpm ${php_fpm_version} is older than the required security fix 1:7.4.33-31." >&2; \
+		exit 1; \
 	fi && \
 	apt-get -y upgrade -o Dpkg::Options::="--force-confold" && \
 	apt-get purge -y packagekit && \
 	apt-get -y autoremove && \
 	apt-get -y clean
-
-RUN	/etc/my_init.d/40_set_config.sh
 
 EXPOSE 443
 

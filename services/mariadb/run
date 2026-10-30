@@ -1,10 +1,29 @@
 #!/bin/bash
 
+set -Eeuo pipefail
+
+DB_VERSION="$(cat /run/owncloud/mariadb-version)"
+DATADIR="${DATADIR:-/config/database}"
+
+if [[ "${DB_VERSION}" == "10.11" ]]; then
+	DB_BASEDIR="/opt/mariadb-10.11"
+	DB_BINDIR="${DB_BASEDIR}/bin"
+	DB_SERVER="${DB_BINDIR}/mariadbd"
+	export LD_LIBRARY_PATH="${DB_BASEDIR}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+	DB_SAFE="${DB_BINDIR}/mariadbd-safe"
+else
+	DB_BASEDIR="/usr"
+	DB_BINDIR="/usr/bin"
+	DB_SERVER="/usr/sbin/mariadbd"
+	DB_SAFE="/usr/bin/mariadbd-safe"
+fi
+
 # Function to handle clean shutdown
 shutdown_mariadb() {
 	if pgrep -x mariadbd >/dev/null 2>&1; then
 		echo "Shutting down MariaDB cleanly..."
-		mysqladmin --socket=/run/mysqld/mysqld.sock -u root shutdown >/dev/null 2>&1
+		"${DB_BINDIR}/mariadb-admin" --socket=/run/mysqld/mysqld.sock -u root shutdown >/dev/null 2>&1 || \
+			"${DB_BINDIR}/mysqladmin" --socket=/run/mysqld/mysqld.sock -u root shutdown >/dev/null 2>&1
 	else
 		echo "MariaDB is not running. Skipping shutdown."
 	fi
@@ -13,8 +32,21 @@ shutdown_mariadb() {
 # Trap SIGTERM and call shutdown function
 trap 'shutdown_mariadb' SIGTERM
 
-# Start MariaDB in the background
-/usr/bin/mariadbd-safe --user=abc --skip-syslog --binlog-format=MIXED &
+# Log the selected MariaDB server binary version without requiring database
+# credentials.
+mariadb_version="$("${DB_SERVER}" --version 2>/dev/null | sed -n 's/.* Ver \([^ ]*\).*/\1/p' || true)"
+if [[ -n "${mariadb_version}" ]]; then
+	echo "ownCloud startup: MariaDB ${mariadb_version}"
+else
+	echo "ownCloud startup: MariaDB version unavailable"
+fi
 
-# Wait for the MariaDB process to finish (keeps the container running)
-wait $!
+# Start the selected MariaDB server in the background. The runtime selector
+# only chooses 10.11 for new data or after an explicit upgrade request.
+"${DB_SAFE}" --defaults-file=/etc/mysql/my.cnf --basedir="${DB_BASEDIR}" \
+	--datadir="${DATADIR}" --socket=/run/mysqld/mysqld.sock \
+	--pid-file=/run/mysqld/mysqld.pid --user=abc --skip-syslog --binlog-format=MIXED &
+DB_SAFE_PID=$!
+
+# Wait for the MariaDB process to finish (keeps the container running).
+wait "${DB_SAFE_PID}"

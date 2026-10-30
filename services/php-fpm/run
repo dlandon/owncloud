@@ -1,3 +1,23 @@
 #!/bin/bash
+set -u
 
-exec /usr/sbin/php-fpm${OC_PHP_VERS} -F -y /config/nginx/nginx-fpm.conf
+PHP_VERSION_FILE="/run/owncloud/php-version"
+PHP_VERSION=""
+FPM=""
+
+if [[ -r "${PHP_VERSION_FILE}" ]]; then
+	read -r PHP_VERSION < "${PHP_VERSION_FILE}"
+fi
+
+case "${PHP_VERSION}" in
+	7.4|8.3)
+		FPM="/usr/sbin/php-fpm${PHP_VERSION}"
+		;;
+esac
+
+if [[ -n "${FPM}" && -x "${FPM}" ]]; then
+	exec "${FPM}" -F -y /config/nginx/nginx-fpm.conf
+fi
+
+echo "PHP-FPM startup error: invalid or missing PHP runtime selection '${PHP_VERSION}'." >&2
+exit 1

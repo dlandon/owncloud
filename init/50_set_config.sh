@@ -4,13 +4,15 @@
 #
 
 # make folders if required
-mkdir -p config/{nginx/site-confs,www,log/mysql,log/nginx,keys} /var/run/{php,mysqld}
+mkdir -p /config/{nginx/site-confs,www,log/mysql,log/nginx,keys} /var/run/{php,mysqld}
 
 # configure mariadb-safe
 sed -i "s/user='mysql'/user='abc'/g" /usr/bin/mariadbd-safe 2>/dev/null
 
-# setup custom cnf file
-cp /defaults/my.cnf /config/custom.cnf
+# Create the persistent MariaDB config only when one does not already exist.
+if [[ ! -f /config/custom.cnf ]]; then
+	cp /defaults/my.cnf /config/custom.cnf
+fi
 [[ ! -L /etc/mysql/conf.d/custom.cnf && -f /etc/mysql/conf.d/custom.cnf ]] && rm /etc/mysql/conf.d/custom.cnf
 [[ ! -L /etc/mysql/conf.d/custom.cnf ]] && ln -s /config/custom.cnf /etc/mysql/conf.d/custom.cnf
 
@@ -19,9 +21,17 @@ cp /defaults/my.cnf /config/custom.cnf
 [[ ! -f /config/nginx/nginx-fpm.conf ]] && cp /defaults/nginx-fpm.conf /config/nginx/nginx-fpm.conf
 [[ ! -f /config/nginx/site-confs/default ]] && cp /defaults/default /config/nginx/site-confs/default
 
-# Replace PHP version in nginx configs
-sed -i "s#php7.[0-9]#php${OC_PHP_VERS}#g" /config/nginx/site-confs/default
-sed -i "s#php7.[0-9]#php${OC_PHP_VERS}#g" /config/nginx/nginx-fpm.conf
+# Read the PHP runtime selected for the installed ownCloud version.
+# Stop startup if the selection is missing or unsupported.
+PHP_VERSION="$(cat /run/owncloud/php-version)"
+if [[ "${PHP_VERSION}" != "7.4" && "${PHP_VERSION}" != "8.3" ]]; then
+	echo "Invalid PHP runtime selection: ${PHP_VERSION}" >&2
+	exit 1
+fi
+
+# Replace the PHP version in the nginx configs.
+sed -i -E "s#php([0-9]+\.[0-9]+)?-fpm#php${PHP_VERSION}-fpm#g" /config/nginx/site-confs/default
+sed -i -E "s#php([0-9]+\.[0-9]+)?-fpm#php${PHP_VERSION}-fpm#g" /config/nginx/nginx-fpm.conf
 
 # Configure nginx for Unraid Tailscale Serve.
 #
@@ -112,20 +122,7 @@ elif [[ -f "${TAILSCALE_NGINX_MARKER}" ]]; then
 fi
 
 # Switch php cli
-update-alternatives --set php /usr/bin/php${OC_PHP_VERS}
-
-# Install the proper version of php-redis
-if [ "`php -m | grep redis`" = "" ]; then
-	apt-get -y install php-pear php${OC_PHP_VERS}-dev
-	pecl uninstall redis
-	pecl channel-update pecl.php.net && pecl install redis
-	apt-get -y remove php-pear php${OC_PHP_VERS}-dev
-
-	echo "extension=redis.so" > /etc/php/${OC_PHP_VERS}/mods-available/redis.ini
-	phpenmod -v ${OC_PHP_VERS} -s ALL redis
-
-	apt-get -y autoremove
-fi
+update-alternatives --set php "/usr/bin/php${PHP_VERSION}"
 
 # Check the ownership on the /data directory
 if [ `stat -c '%U:%G' /data` != 'abc:users' ]; then

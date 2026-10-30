@@ -1,42 +1,79 @@
 #!/bin/bash
+set -u
 
-# Clean up redo logs if database version doesn't match installed mariadb version
-UPGRADE_FILE="$DATADIR/mysql_upgrade_info"
+DATADIR="${DATADIR:-/config/database}"
+RUNTIME_DIR="/run/owncloud"
+LOG_DIR="${CONFIG:-/config}/log/mysql"
+UPGRADE_LOG="${LOG_DIR}/upgrade_db.log"
+SOCKET="/run/mysqld/mysqld.sock"
+STATUS=0
 
-if [ -f "$UPGRADE_FILE" ]; then
-	DB_VERS="$(cut -d'-' -f1 < "$UPGRADE_FILE" | cut -d'.' -f1,2)"
+log_output() {
+	while IFS= read -r line; do
+		logger -t mariadb -- "${line}"
+	done < "${UPGRADE_LOG}"
+}
+
+if [[ ! -r "${RUNTIME_DIR}/mariadb-version" || ! -r "${RUNTIME_DIR}/mariadb-bin-path" ]]; then
+	logger -t mariadb "MariaDB runtime selection files are missing."
+	STATUS=1
 else
-	DB_VERS="unknown"
-fi
-
-if [ "$DB_VERS" != "$MARIADB_VERS" ]; then
-	logger "database version mismatch ($DB_VERS != $MARIADB_VERS) - purging redo logs so update succeeds" -tmariadb
-	rm -f "$DATADIR/ib_logfile"*
-else
-	logger "database version $DB_VERS matches expected $MARIADB_VERS - no redo logs need to be purged" -tmariadb
-fi
-
-# Wait for MariaDB to become ready
-RETRIES=60
-until mysqladmin ping -u root --password="$DB_PASS" --silent; do
-	((RETRIES--))
-	if [ "$RETRIES" -le 0 ]; then
-		logger "MariaDB did not start in time." -tmariadb
-		exit 1
+	DB_VERSION="$(<"${RUNTIME_DIR}/mariadb-version")"
+	DB_BINDIR="$(<"${RUNTIME_DIR}/mariadb-bin-path")"
+	DB_PASSWORD="${DB_PASS:-}"
+	if [[ ${#DB_PASSWORD} -lt 4 ]]; then
+		DB_PASSWORD="owncloud"
 	fi
-	sleep 5
-done
 
-# Upgrade databases
-logger "Upgrading databases..." -tmariadb
-/usr/bin/mariadb-upgrade --user=root --password="$DB_PASS" &> /tmp/result
+	if [[ "${DB_VERSION}" == "10.11" ]]; then
+		export LD_LIBRARY_PATH="/opt/mariadb-10.11/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+	fi
+	export PATH="${DB_BINDIR}:${PATH}"
 
-# Handle result
-if grep -q "Upgrade failed" /tmp/result; then
-	logger "Error: Databases failed to upgrade - check 'DB_PASS' password." -tmariadb
-else
-	logger "$(cat /tmp/result)" -tmariadb
-	rm -f /root/upgrade_db
+	if ! mkdir -p "${LOG_DIR}"; then
+		logger -t mariadb "Unable to create MariaDB log directory ${LOG_DIR}."
+		STATUS=1
+	fi
+
+	if [[ "${STATUS}" -eq 0 ]]; then
+		logger -t mariadb "Upgrading MariaDB ${DB_VERSION} system tables..."
+		RETRIES=60
+		DB_READY=0
+		while [[ "${RETRIES}" -gt 0 ]]; do
+			if mariadb-admin --socket="${SOCKET}" ping -u root --password="${DB_PASSWORD}" --silent 2>/dev/null || \
+				mysqladmin --socket="${SOCKET}" ping -u root --password="${DB_PASSWORD}" --silent 2>/dev/null; then
+				DB_READY=1
+				break
+			fi
+			RETRIES=$((RETRIES - 1))
+			sleep 5
+		done
+
+		if [[ "${DB_READY}" -eq 0 ]]; then
+			logger -t mariadb "MariaDB did not start in time; upgrade was not run."
+			STATUS=1
+		fi
+	fi
+
+	if [[ "${STATUS}" -eq 0 ]]; then
+		UPGRADE_BIN="${DB_BINDIR}/mariadb-upgrade"
+		if [[ ! -x "${UPGRADE_BIN}" ]]; then
+			UPGRADE_BIN="${DB_BINDIR}/mysql_upgrade"
+		fi
+
+		if [[ ! -x "${UPGRADE_BIN}" ]]; then
+			logger -t mariadb "No MariaDB upgrade utility found in ${DB_BINDIR}."
+			STATUS=1
+		elif "${UPGRADE_BIN}" --socket="${SOCKET}" --user=root --password="${DB_PASSWORD}" > "${UPGRADE_LOG}" 2>&1; then
+			logger -t mariadb "MariaDB system-table upgrade completed."
+			log_output
+			rm -f /root/upgrade_db
+		else
+			STATUS=$?
+			logger -t mariadb "MariaDB system-table upgrade failed with status ${STATUS}; full output is in ${UPGRADE_LOG}."
+			log_output
+		fi
+	fi
 fi
 
-rm -f /tmp/result
+exit "${STATUS}"
